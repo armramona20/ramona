@@ -1,0 +1,97 @@
+{
+ "duration": 59.5,
+ "scenes": {
+  "s1": [
+   0.0,
+   5.0
+  ],
+  "s2": [
+   5.0,
+   12.5
+  ],
+  "s3": [
+   12.5,
+   19.5
+  ],
+  "s4": [
+   19.5,
+   26.5
+  ],
+  "s5": [
+   26.5,
+   34.0
+  ],
+  "s6": [
+   34.0,
+   39.5
+  ],
+  "s7": [
+   39.5,
+   46.5
+  ],
+  "s8": [
+   46.5,
+   54.0
+  ],
+  "s9": [
+   54.0,
+   59.5
+  ]
+ },
+ "vo": [
+  {
+   "id": "s1",
+   "file": "/home/user/ramona/urthe-intoxicating-shirt/vo/s1.mp3",
+   "at": 0.15,
+   "dur": 4.032
+  },
+  {
+   "id": "s2",
+   "file": "/home/user/ramona/urthe-intoxicating-shirt/vo/s2.mp3",
+   "at": 5.35,
+   "dur": 6.504
+  },
+  {
+   "id": "s3",
+   "file": "/home/user/ramona/urthe-intoxicating-shirt/vo/s3.mp3",
+   "at": 12.85,
+   "dur": 5.64
+  },
+  {
+   "id": "s4",
+   "file": "/home/user/ramona/urthe-intoxicating-shirt/vo/s4.mp3",
+   "at": 19.85,
+   "dur": 5.64
+  },
+  {
+   "id": "s5",
+   "file": "/home/user/ramona/urthe-intoxicating-shirt/vo/s5.mp3",
+   "at": 26.85,
+   "dur": 6.096
+  },
+  {
+   "id": "s6",
+   "file": "/home/user/ramona/urthe-intoxicating-shirt/vo/s6.mp3",
+   "at": 34.35,
+   "dur": 4.272
+  },
+  {
+   "id": "s7",
+   "file": "/home/user/ramona/urthe-intoxicating-shirt/vo/s7.mp3",
+   "at": 39.85,
+   "dur": 5.88
+  },
+  {
+   "id": "s8",
+   "file": "/home/user/ramona/urthe-intoxicating-shirt/vo/s8.mp3",
+   "at": 46.85,
+   "dur": 6.168
+  },
+  {
+   "id": "s9",
+   "file": "/home/user/ramona/urthe-intoxicating-shirt/vo/s9.mp3",
+   "at": 54.35,
+   "dur": 3.744
+  }
+ ]
+}

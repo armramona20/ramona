@@ -1,16 +1,17 @@
-# URTHE – INTOXICATING SHIRTS · code animation clip (45s, 9:16)
+# URTHE – INTOXICATING SHIRTS · code animation clip (9:16, with Thai voiceover)
 
-- `index.html` – the animation (HTML/CSS/JS, deterministic timeline). Open via a local server (`python3 -m http.server`) to watch it loop live; `?t=12.5` shows a single frame.
-- `render.js` – renders it frame-by-frame to MP4 (1080x1920, 30fps): `node render.js out.mp4`
-- `stills.js` – quick preview PNGs: `node stills.js outdir 2 10 20`
-- `music.py` – generates an original 120 BPM beat synced to the scene cuts (whooshes, riser, price slam + ding). Needs numpy.
-- `urthe-intoxicating-shirts-45s.mp4` – rendered clip with music.
+**Output:** `urthe-intoxicating-shirts.mp4` – 1080x1920, 30fps, ~60s, Thai voiceover + original beat. No prices shown (they change often).
 
-Rebuild with sound:
+## Rebuild
 ```
-node render.js silent.mp4 && python3 music.py music.wav
-ffmpeg -i silent.mp4 -i music.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k -af loudnorm=I=-14:TP=-1.5 -shortest urthe-intoxicating-shirts-45s.mp4
+pip install edge-tts numpy
+python3 build.py              # TTS -> timeline -> render frames -> music -> mix
+python3 build.py --no-video   # only redo voice/music mix (scene lengths must stay the same)
 ```
+- `voiceover.json` – the script, voice (`th-TH-PremwadeeNeural`; male: `th-TH-NiwatNeural`), speed. Each scene stretches to fit its line (min length per scene, rounded to 0.5s so beats hit every cut).
+- `index.html` – the animation (HTML/CSS/JS, reads scene times from generated `timeline.js`). Serve the folder (`python3 -m http.server`) to watch it live; `?t=12.5` shows one frame.
+- `render.js` – Playwright frame-by-frame renderer; `stills.js` – preview PNGs.
+- `music.py` – original 120 BPM beat synced to `timeline.json`.
+- `vo/` – generated voice lines. `assets/` – product photos, fonts, cropped model footage.
 
-Timeline: 0–4.5 hook · 4.5–10 brand/title · 10–15.5 fabric · 15.5–21 metal tag · 21–26.5 back embroidery + pleat · 26.5–32 4 colors · 32–36.5 size · 36.5–41.5 Flash Sale ฿360 · 41.5–45 CTA.
-Price/sales info is from the Shopee screen recording of 21 Nov 2026 — update in `index.html` if it changes.
+Scenes: hook · brand/title · 01 fabric · 02 metal tag · 03 back embroidery + pleat · 4 colors · size · best seller 1,000+ · CTA.

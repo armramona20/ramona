@@ -4,7 +4,7 @@ const { chromium } = require('playwright');
 const { spawn } = require('child_process');
 const http = require('http'), fs = require('fs'), path = require('path');
 
-const OUT = process.argv[2] || 'urthe-intoxicating-shirts-45s.mp4';
+const OUT = process.argv[2] || 'build-silent.mp4';
 const FPS = +(process.argv[3] || 30);
 const ROOT = __dirname;
 const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.woff2': 'font/woff2', '.png': 'image/png' };

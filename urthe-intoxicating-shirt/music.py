@@ -1,16 +1,25 @@
-"""Generate an original 45s beat (120 BPM) synced to the clip's scene cuts.
-Usage: python3 music.py out.wav
+"""Generate an original beat (120 BPM) synced to the clip's scene cuts.
+Usage: python3 music.py out.wav [timeline.json]
 Needs only numpy. Scene cuts are on half-beat grid (0.5s), so hits land exactly on cuts.
 """
 import sys, wave
 import numpy as np
 
 SR = 44100
-DUR = 45.0
 BPM = 120
 BEAT = 60 / BPM                      # 0.5s
-CUTS = [4.5, 10, 15.5, 21, 26.5, 32, 36.5, 41.5]
-PRICE_SLAM = 37.2                    # price number lands (S8 start + 0.7s)
+# scene timing comes from timeline.json (written by build.py); falls back to the original 45s cut
+if len(sys.argv) > 2:
+    import json
+    _tl = json.load(open(sys.argv[2]))
+    DUR = float(_tl["duration"])
+    CUTS = [v[0] for k, v in sorted(_tl["scenes"].items()) if v[0] > 0]
+    RISE_FROM, HIT = _tl["scenes"]["s7"][0], _tl["scenes"]["s8"][0] + 0.7
+else:
+    DUR = 45.0
+    CUTS = [4.5, 10, 15.5, 21, 26.5, 32, 36.5, 41.5]
+    RISE_FROM, HIT = 32.0, 37.2
+PRICE_SLAM = HIT                     # big number lands (S8 start + 0.7s)
 N = int(SR * DUR)
 rng = np.random.default_rng(7)
 L = np.zeros(N); R = np.zeros(N)
@@ -144,7 +153,7 @@ for c in CUTS:
     both(c, impact(), 0.35)
 
 # build-up into the Flash Sale scene, then slam + cash ding
-both(32.0, riser(4.5), 1.0)
+both(RISE_FROM, riser(CUTS[CUTS.index(next(c for c in CUTS if c > RISE_FROM))] - RISE_FROM), 1.0)
 both(PRICE_SLAM, impact(), 0.8)
 both(PRICE_SLAM + 0.05, ding(), 1.0)
 

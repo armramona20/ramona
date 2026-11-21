@@ -92,8 +92,8 @@
   #s8 .fs{left:0;width:100%;text-align:center;top:200px;font-size:150px;white-space:nowrap;color:#fff;text-shadow:0 10px 0 rgba(0,0,0,.18)}
   #s8 .fs em{font-style:normal;color:#FFE14D}
   #s8 .lbl{left:0;width:100%;text-align:center;top:420px;font-size:56px;font-weight:600}
-  #s8 .price{left:0;width:100%;text-align:center;top:500px;font-size:400px;color:#fff;text-shadow:0 18px 0 rgba(120,20,0,.35)}
-  #s8 .price small{font-size:220px;vertical-align:top;position:relative;top:40px;margin-right:8px}
+  #s8 .price{left:0;width:100%;text-align:center;top:540px;font-size:330px;white-space:nowrap;color:#fff;text-shadow:0 18px 0 rgba(120,20,0,.35)}
+  #s8 .price small{font-size:220px;vertical-align:top;position:relative;top:20px;margin-left:6px;color:#FFE14D}
   #s8 .chips{left:0;width:100%;top:970px;display:flex;flex-direction:column;align-items:center;gap:22px}
   #s8 .chip{background:#fff;color:var(--orange);font-size:46px;box-shadow:0 10px 0 rgba(0,0,0,.12)}
   #s8 .chip.dark{background:var(--ink);color:#fff}
@@ -122,7 +122,7 @@
     <div class="shade"></div>
     <div class="abs flash chip" style="background:var(--orange);font-size:42px;font-weight:700">
       <svg width="34" height="40" viewBox="0 0 24 28"><path d="M14 0 2 16h8l-2 12 12-16h-8z" fill="#FFE14D"/></svg>
-      FLASH SALE ฿360
+      HOT · ขายแล้ว 1,000+ ชิ้น
     </div>
     <div class="abs mask l1 th"><span>เชิ้ตตัวเดียว</span></div>
     <div class="abs mask l2 th"><span>เท่ได้ทุกลุค</span></div>
@@ -215,12 +215,12 @@
   <!-- S8 PRICE -->
   <section class="scene" id="s8" data-start="36.5" data-end="41.5">
     <div class="abs rays"></div>
-    <div class="abs en fs"><em>⚡</em>FLASH SALE<em>⚡</em></div>
-    <div class="abs lbl th">ราคาหลังใช้โค้ดส่วนลด เหลือเพียง</div>
-    <div class="abs en price"><small>฿</small><span id="s8n">360</span></div>
+    <div class="abs en fs"><em>⚡</em>BEST SELLER<em>⚡</em></div>
+    <div class="abs lbl th">ขายดีมาก! ขายไปแล้วกว่า</div>
+    <div class="abs en price"><span id="s8n">1,000</span><small>+</small></div>
     <div class="abs chips">
-      <div class="chip th">ขายแล้ว 1,000+ ชิ้น</div>
-      <div class="chip dark th">ผ่อน SPayLater ฿32.49 x 12 เดือน</div>
+      <div class="chip th">ชิ้น บน Shopee</div>
+      <div class="chip dark th">เช็กราคา &amp; โปรล่าสุดในตะกร้า</div>
     </div>
     <div class="abs prod"><img src="assets/gray-frontback.jpg" alt=""></div>
   </section>
@@ -234,7 +234,7 @@
     <div class="abs mask big th"><span>สั่งเลยวันนี้!</span></div>
     <div class="abs btn th">
       <svg width="70" height="70" viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h11l2-8H7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="19.5" r="1.6" fill="#fff"/><circle cx="17" cy="19.5" r="1.6" fill="#fff"/></svg>
-      กดตะกร้าเลย ฿360
+      กดตะกร้าเลย!
     </div>
     <div class="abs link th">ช้อปที่ Shopee <b>s.shopee.co.th/8KrFafsli4</b></div>
     <svg class="abs arrow" viewBox="0 0 24 24"><path d="M12 3v16m-7-7 7 7 7-7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -249,9 +249,13 @@
 </div>
 <div id="hint">คลิกเพื่อเล่นใหม่ · ?t=วินาที เพื่อดูเฟรม</div>
 
+<script src="timeline.js"></script>
 <script>
 (() => {
-const DURATION = 45, FPS_SRC = 30, SRC_FRAMES = 518;
+const TL = window.TIMELINE || { scenes: {s1:[0,4.5],s2:[4.5,10],s3:[10,15.5],s4:[15.5,21],s5:[21,26.5],s6:[26.5,32],s7:[32,36.5],s8:[36.5,41.5],s9:[41.5,45]} };
+for (const id in TL.scenes) { const el = document.getElementById(id); el.dataset.start = TL.scenes[id][0]; el.dataset.end = TL.scenes[id][1]; }
+const DURATION = TL.scenes.s9[1], FPS_SRC = 30, SRC_FRAMES = 518;
+const ST = id => TL.scenes[id][0], EN = id => TL.scenes[id][1];
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -322,9 +326,9 @@ function render(t) {
 
   // ---------- S1 HOOK ----------
   { const sc = $('#s1'), r = t - 0;
-    if (t < 4.5) {
+    if (t < EN('s1')) {
       const img = $('img', sc); setFoot(img, r);
-      css(img, { transform: `scale(${lerp(1.18, 1.02, P(t, 0, 4.5, E.out))})` });
+      css(img, { transform: `scale(${lerp(1.18, 1.02, P(t, 0, EN('s1'), E.out))})` });
       rise($('.l1', sc), t, .15); rise($('.l2', sc), t, .55); rise($('.l3', sc), t, 1.0);
       const l2 = $('.l2 span', sc);
       l2.style.transform += ` rotate(${lerp(0, -3, P(t, .55, .5, E.back))}deg)`;
@@ -335,12 +339,12 @@ function render(t) {
     } }
 
   // ---------- S2 TITLE ----------
-  { const sc = $('#s2'), t0 = 4.5;
-    if (t >= t0 && t < 10) {
+  { const sc = $('#s2'), t0 = ST('s2');
+    if (t >= t0 && t < EN('s2')) {
       const r = t - t0;
       $$('.bgtext', sc).forEach((b, i) => b.style.transform = `translateX(${(i ? -1 : 1) * (r * 90) - (i ? 0 : 600)}px)`);
       const card = $('.card', sc); cardIn(card, t, t0);
-      card.style.transform += ` scale(${lerp(1, 1.04, r / 5.5)})`;
+      card.style.transform += ` scale(${lerp(1, 1.04, r / (EN('s2') - t0))})`;
       setFoot($('img', card), Math.min(12.2 + r, 17.2));
       $$('#s2logo > .mask > span').forEach((s, i) => { const k = P(t, t0 + .35 + i * .08, .6, E.expo); s.style.transform = `translateY(${(1 - k) * 110}%)`; });
       const kt2 = P(t, t0 + .9, .6, E.out); css($('.t2', sc), { opacity: kt2, letterSpacing: `${lerp(.5, .14, kt2)}em` });
@@ -350,30 +354,30 @@ function render(t) {
     } }
 
   // ---------- S3 FABRIC ----------
-  { const sc = $('#s3'), t0 = 10;
-    if (t >= t0 && t < 15.5) {
+  { const sc = $('#s3'), t0 = ST('s3');
+    if (t >= t0 && t < EN('s3')) {
       const card = $('.card', sc); cardIn(card, t, t0);
-      const k = P(t, t0, 5.5, E.lin);
+      const k = P(t, t0, EN('s3') - t0, E.lin);
       $('img', card).style.transform = `scale(${lerp(1.05, 1.32, k)}) translate(${lerp(0, -40, k)}px, ${lerp(0, 30, k)}px)`;
       featureText(sc, t, t0);
     } }
 
   // ---------- S4 METAL TAG ----------
-  { const sc = $('#s4'), t0 = 15.5;
-    if (t >= t0 && t < 21) {
+  { const sc = $('#s4'), t0 = ST('s4');
+    if (t >= t0 && t < EN('s4')) {
       const r = t - t0, card = $('.card', sc); cardIn(card, t, t0);
       const foot = $('#s4foot'), img = $('#s4img');
       // footage close-ups: 2.07–3.40 then 6.93–8.23, then still photo
       if (r < 1.33) setFoot(foot, 2.07 + r); else setFoot(foot, 6.93 + Math.min(r - 1.33, 1.28));
       foot.style.transform = `scale(1.08)`;
       const ki = P(t, t0 + 2.6, .45, E.inOut);
-      css(img, { opacity: ki, transform: `scale(${lerp(1.25, 1.05, P(t, t0 + 2.6, 2.9, E.out))})` });
+      css(img, { opacity: ki, transform: `scale(${lerp(1.25, 1.05, P(t, t0 + 2.6, EN('s4') - t0 - 2.6, E.out))})` });
       featureText(sc, t, t0);
     } }
 
   // ---------- S5 BACK ----------
-  { const sc = $('#s5'), t0 = 21;
-    if (t >= t0 && t < 26.5) {
+  { const sc = $('#s5'), t0 = ST('s5');
+    if (t >= t0 && t < EN('s5')) {
       const r = t - t0, card = $('.card', sc); cardIn(card, t, t0);
       // zoom towards the triangle embroidery (~ image coords 543,583 of 1024)
       const fx = 543 / 1024 * 960, fy = 583 / 1024 * 960;
@@ -384,13 +388,13 @@ function render(t) {
       const rs = 150; css(ring, { left: `${fx - rs / 2}px`, top: `${fy - rs / 2}px`, width: `${rs}px`, height: `${rs}px`,
         borderWidth: `${6 / s}px`, transform: `scale(${kr * (1 + .06 * Math.sin(r * 8))})`, opacity: clamp((t - (t0 + 1.6)) / .2) * (1 - P(t, t0 + 3.3, .3)) });
       const foot = $('#s5foot'); setFoot(foot, 4.07 + clamp(r - 3.6, 0, 1.36));
-      css(foot, { opacity: P(t, t0 + 3.6, .4, E.inOut), transform: `scale(${lerp(1.15, 1.05, P(t, t0 + 3.6, 1.9))})` });
+      css(foot, { opacity: P(t, t0 + 3.6, .4, E.inOut), transform: `scale(${lerp(1.15, 1.05, P(t, t0 + 3.6, EN('s5') - t0 - 3.6))})` });
       featureText(sc, t, t0);
     } }
 
   // ---------- S6 COLORS ----------
-  { const sc = $('#s6'), t0 = 26.5;
-    if (t >= t0 && t < 32) {
+  { const sc = $('#s6'), t0 = ST('s6');
+    if (t >= t0 && t < EN('s6')) {
       const r = t - t0;
       rise($('.h', sc), t, t0 + .05);
       const kh = P(t, t0 + .05, .5, E.back); $('.h', sc).style.transform = `scale(${lerp(.7, 1, kh)})`; $('.h', sc).style.opacity = kh;
@@ -408,8 +412,8 @@ function render(t) {
     } }
 
   // ---------- S7 SIZE ----------
-  { const sc = $('#s7'), t0 = 32;
-    if (t >= t0 && t < 36.5) {
+  { const sc = $('#s7'), t0 = ST('s7');
+    if (t >= t0 && t < EN('s7')) {
       rise($('.h', sc), t, t0 + .05);
       const kh = P(t, t0 + .05, .5, E.expo); $('.h', sc).style.opacity = kh;
       const card = $('.sc', sc); const kc = P(t, t0 + .2, .6, E.back);
@@ -423,8 +427,8 @@ function render(t) {
     } }
 
   // ---------- S8 PRICE ----------
-  { const sc = $('#s8'), t0 = 36.5;
-    if (t >= t0 && t < 41.5) {
+  { const sc = $('#s8'), t0 = ST('s8');
+    if (t >= t0 && t < EN('s8')) {
       const r = t - t0;
       $('.rays', sc).style.transform = `rotate(${r * 18}deg)`;
       const kf = P(t, t0 + .05, .5, E.back);
@@ -433,7 +437,8 @@ function render(t) {
       const kp = P(t, t0 + .7, .45, E.back);
       const shake = (t > t0 + 1.05 && t < t0 + 1.4) ? Math.sin(r * 90) * 14 * (1 - (r - 1.05) / .35) : 0;
       const beat = r > 1.5 ? 1 + .04 * Math.max(0, Math.sin((r - 1.5) * Math.PI * 2.2)) : 1;
-      css($('.price', sc), { transform: `translateX(${shake}px) scale(${lerp(2.6, 1, kp) * beat})`, opacity: clamp((t - t0 - .7) / .1) });
+      css($('.price', sc), { transform: `translateX(${shake}px) scale(${lerp(1.8, 1, kp) * beat})`, opacity: clamp((t - t0 - .7) / .1) });
+      $('#s8n').textContent = Math.round(1000 * P(t, t0 + .7, .9, E.out)).toLocaleString('en-US');
       $$('.chips .chip', sc).forEach((c, i) => { const k = P(t, t0 + 1.4 + i * .2, .5, E.back);
         css(c, { transform: `scale(${k})`, opacity: clamp((t - (t0 + 1.4 + i * .2)) / .15) }); });
       const kd = P(t, t0 + 1.9, .7, E.back);
@@ -441,10 +446,10 @@ function render(t) {
     } }
 
   // ---------- S9 CTA ----------
-  { const sc = $('#s9'), t0 = 41.5;
+  { const sc = $('#s9'), t0 = ST('s9');
     if (t >= t0) {
       const r = t - t0, img = $('img', sc); setFoot(img, 8.23 + r);
-      css(img, { transform: `scale(${lerp(1.12, 1.0, P(t, t0, 3.5, E.out))})` });
+      css(img, { transform: `scale(${lerp(1.12, 1.0, P(t, t0, EN('s9') - t0, E.out))})` });
       const kl = P(t, t0 + .1, .6, E.expo);
       css($('.logo', sc), { opacity: kl, letterSpacing: `${lerp(.4, .06, kl)}em` });
       css($('.sub', sc), { opacity: P(t, t0 + .4, .4) });
@@ -456,7 +461,8 @@ function render(t) {
     } }
 
   // ---------- global ----------
-  $('#brandTag').style.opacity = (t >= 4.5 && t < 10) || t >= 41.5 || (t >= 26.5 && t < 32) || (t >= 36.5 && t < 41.5) ? 0 : .9;
+  const cur = scenes.find(s => t >= s.start && t < s.end);
+  $('#brandTag').style.opacity = cur && ['s2','s6','s8','s9'].includes(cur.el.id) ? 0 : .9;
   $('#progress').style.width = (t / DURATION * 100) + '%';
   gctx.putImageData(tiles[Math.floor(t * 24) % tiles.length], 0, 0);
 
