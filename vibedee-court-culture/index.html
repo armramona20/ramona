@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIBEDEE Court Culture</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+  :root{
+    --green:#2F6E5E; --green2:#4E9A84; --deep:#13332C; --blue:#27A6CF; --cream:#F2EFE8;
+    --ink:#121414; --red:#E5482F; --lime:#D7F25A; --white:#fff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#000;height:100%;overflow:hidden}
+  body{display:flex;align-items:center;justify-content:center;font-family:'Kanit',sans-serif;color:#fff}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--cream);transform-origin:center center;flex:none}
+  .scene{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+  .abs{position:absolute}
+  .full{left:0;width:100%;text-align:center}
+  .sans{font-family:'Inter Tight',sans-serif;font-weight:900;letter-spacing:-.01em}
+  .serif{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400}
+  .th{font-family:'Kanit',sans-serif}
+  .mask{overflow:hidden;display:block;padding:0 10px}
+  .mask>span{display:inline-block;will-change:transform}
+  .card{position:absolute;overflow:hidden;border-radius:44px;background:#fafafa;box-shadow:0 40px 80px rgba(0,0,0,.18)}
+  .card img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;will-change:transform}
+  .chip{display:inline-flex;align-items:center;gap:16px;padding:16px 36px;border-radius:999px;font-weight:600;font-size:46px;white-space:nowrap}
+  .tick{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;background:var(--green);flex:none}
+  .cross{display:inline-flex;align-items:center;justify-content:center;width:70px;height:70px;border-radius:50%;background:var(--red);flex:none}
+
+  #grain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.06;mix-blend-mode:overlay}
+  #wipe{position:absolute;top:-10%;left:0;width:150%;height:120%;pointer-events:none;display:flex}
+  #wipe div{flex:1}
+  #progress{position:absolute;top:0;left:0;height:10px;background:var(--blue)}
+  #brand{position:absolute;top:64px;left:60px;font-size:40px;letter-spacing:.18em;color:var(--green)}
+
+  /* A hook */
+  #A{background:var(--ink)}
+  #A .drum{left:290px;top:260px;width:500px;height:500px}
+  #A .count{left:650px;top:250px;width:210px;height:210px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-direction:column;line-height:1}
+  #A .count b{font-size:96px;font-family:'Inter Tight';font-weight:900}
+  #A .count small{font-size:36px;font-weight:600}
+  #A .l1{top:900px;font-size:120px;font-weight:900;line-height:1.2}
+  #A .l2{top:1060px;font-size:150px;font-weight:900;line-height:1.2;color:var(--red)}
+  #A .q{top:1300px}
+  #A .q span{background:var(--lime);color:var(--ink);font-size:96px;font-weight:800;padding:6px 44px;border-radius:24px}
+
+  /* B pain */
+  #B{background:#1b1d1d}
+  #B .title{top:180px;font-size:76px;font-weight:700;line-height:1.3}
+  #B .title em{font-style:normal;color:var(--lime)}
+  #B .behind{left:240px;top:430px;width:600px;height:560px;border-radius:30px;
+    background:repeating-linear-gradient(45deg,#E5482F 0 26px,#1b1d1d 26px 52px)}
+  #B .tee{left:190px;top:400px;width:700px;height:620px}
+  #B .pains{left:110px;top:1110px;display:flex;flex-direction:column;gap:26px}
+  #B .pain{display:flex;align-items:center;gap:28px;font-size:66px;font-weight:700;background:#262929;border-radius:28px;padding:22px 40px 22px 26px;border:3px solid #333}
+
+  /* C reveal */
+  #C .now{top:110px;font-size:150px;font-weight:900;color:var(--green)}
+  #C .card{left:130px;top:330px;width:820px;height:820px}
+  #C .brandname{top:1200px;font-size:110px;letter-spacing:.2em;color:var(--ink)}
+  #C .court{top:1330px;font-size:210px;color:var(--green);line-height:1}
+  #C .culture{top:1530px;font-size:190px;color:var(--green);line-height:1;font-family:'Inter Tight';font-weight:800;letter-spacing:-.02em}
+
+  /* D fabric */
+  #D .card{left:60px;top:130px;width:960px;height:900px}
+  #D .lbl{left:90px;top:1080px;font-size:56px;font-weight:800;letter-spacing:.3em;color:var(--green)}
+  #D .big{left:70px;top:1130px;font-size:300px;color:var(--ink);line-height:1}
+  #D .comb{left:70px;top:1440px}
+  #D .comb .chip{background:var(--green);color:#fff;font-family:'Inter Tight';font-weight:800;font-size:54px}
+  #D .words{left:60px;top:1600px;display:flex;gap:26px}
+  #D .w{display:flex;align-items:center;gap:18px;background:#fff;border-radius:30px;padding:22px 34px;font-size:76px;font-weight:800;color:var(--ink);box-shadow:0 16px 40px rgba(0,0,0,.08)}
+
+  /* E boxy */
+  #E .card{left:60px;top:150px;width:960px;height:960px}
+  #E svg.box{left:60px;top:150px;width:960px;height:960px}
+  #E .tag{left:640px;top:200px}
+  #E .tag .chip{background:var(--blue);color:#fff;font-family:'Inter Tight';font-weight:900;font-size:50px;letter-spacing:.06em}
+  #E .t1{top:1180px;font-size:150px;font-weight:900;color:var(--ink)}
+  #E .t2{top:1400px}
+  #E .t2 .chip{background:var(--green);color:#fff;font-size:80px;font-weight:800;padding:18px 50px}
+
+  /* F DTG */
+  #F{background:var(--deep)}
+  #F .card{left:60px;top:150px;width:960px;height:960px;background:#0d0d0d}
+  #F .card img,#G .card img{transform-origin:0 0}
+  #F .scan{left:0;width:100%;height:14px;background:linear-gradient(90deg,var(--blue),var(--lime),var(--blue));box-shadow:0 0 40px 10px rgba(39,166,207,.7)}
+  #F .t1{top:1170px;font-size:140px;color:#fff;line-height:1.1}
+  #F .t1 b{font-family:'Inter Tight';font-weight:900;color:var(--lime)}
+  #F .t2{top:1360px;font-size:76px;font-weight:600;color:#d8efe7}
+  #F .t3{left:720px;top:90px;width:300px;height:300px;border-radius:50%;background:var(--lime);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:96px;font-weight:900}
+
+  /* G court */
+  #G .card{left:60px;top:150px;width:960px;height:1000px}
+  #G .t1{top:1210px;font-size:96px;font-weight:700;color:var(--ink)}
+  #G .t2{top:1340px;font-size:118px;font-weight:900}
+  #G .t2 .g{color:var(--green)} #G .t2 .b{color:var(--blue)}
+  #G .sw{top:1530px;width:110px;height:110px;border-radius:50%;border:8px solid #fff;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+  #G .wow{left:620px;top:120px;width:380px;height:180px;border-radius:30px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:96px;font-weight:900;color:#fff;box-shadow:0 14px 0 #9d2a17}
+
+  /* H sport/street */
+  #H{background:var(--green)}
+  #H .c1{left:40px;top:330px;width:560px;height:560px}
+  #H .c2{left:480px;top:520px;width:560px;height:560px}
+  #H .ball{width:120px;height:120px}
+  #H .t1{left:70px;top:1180px;font-size:110px;font-weight:800}
+  #H .t2{left:70px;top:1340px;font-size:110px;font-weight:800}
+  #H .t3{top:1540px}
+  #H .t3 span{background:var(--lime);color:var(--ink);font-size:140px;font-weight:900;padding:0 50px;border-radius:30px}
+
+  /* I colors */
+  #I .half{top:0;width:540px;height:1920px;overflow:hidden}
+  #I .half img{position:absolute;left:-150px;top:560px;width:840px;height:840px}
+  #I .lab{top:1470px;width:540px;text-align:center;font-size:120px;font-weight:900}
+  #I .head{top:190px}
+  #I .head span{background:var(--green);color:#fff;font-size:96px;font-weight:800;padding:10px 60px;border-radius:999px;box-shadow:0 14px 40px rgba(0,0,0,.25)}
+
+  /* J size */
+  #J .head{top:150px;font-size:130px;font-weight:900;color:var(--ink)}
+  #J .head b{font-family:'Inter Tight';color:var(--green)}
+  #J .pills{left:0;width:100%;top:360px;display:flex;justify-content:center;gap:22px}
+  #J .pill{width:170px;height:130px;border-radius:30px;background:#fff;color:#aaa;display:flex;align-items:center;justify-content:center;font-family:'Inter Tight';font-weight:900;font-size:64px;border:5px solid #e3e0d8}
+  #J .table{left:60px;top:560px;width:960px;height:714px;border-radius:40px;overflow:hidden;background:#fff;box-shadow:0 30px 60px rgba(0,0,0,.1)}
+  #J .table img{position:absolute;left:12px;top:0;width:936px}
+  #J .ok{top:1330px;font-size:84px;font-weight:800;color:var(--ink)}
+  #J .ship{top:1480px}
+  #J .ship .chip{background:var(--blue);color:#fff;font-size:64px;font-weight:700;padding:20px 48px}
+
+  /* K promo */
+  #K{background:var(--red)}
+  #K .rays{left:50%;top:900px;width:3000px;height:3000px;margin:-1500px 0 0 -1500px;border-radius:50%;
+    background:repeating-conic-gradient(rgba(255,255,255,.12) 0deg 9deg,rgba(255,255,255,0) 9deg 18deg)}
+  #K .t1{top:230px;font-size:120px;font-weight:800}
+  #K .sale{top:400px;font-size:400px;line-height:1;font-family:'Inter Tight';font-weight:900;color:#fff;text-shadow:0 18px 0 rgba(110,20,0,.35)}
+  #K .t2{top:820px}
+  #K .t2 span{background:var(--lime);color:var(--ink);font-size:110px;font-weight:900;padding:6px 50px;border-radius:24px}
+  #K .clock{left:390px;top:1080px;width:300px;height:300px}
+  #K .t3{top:1420px;font-size:96px;font-weight:800}
+
+  /* L CTA */
+  #L{background:var(--deep)}
+  #L .c1{left:90px;top:250px;width:520px;height:520px}
+  #L .c2{left:470px;top:380px;width:520px;height:520px}
+  #L .logo1{top:960px;font-size:84px;letter-spacing:.24em}
+  #L .logo2{top:1050px;font-size:130px;color:#9fd8c6}
+  #L .btn{left:140px;top:1250px;width:800px;height:180px;border-radius:999px;background:var(--red);display:flex;align-items:center;justify-content:center;gap:26px;font-size:84px;font-weight:900;box-shadow:0 16px 0 #9d2a17}
+  #L .hurry{top:1480px;font-size:84px;font-weight:800;color:var(--lime)}
+  #L .arrow{left:500px;top:1610px;width:80px;height:80px}
+  #hint{position:fixed;bottom:12px;left:0;right:0;text-align:center;font:14px sans-serif;color:#888}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- A: hook (0.32 "เสื้อยืดที่ซักสองรอบแล้วบางยวบ", 2.92 "ใครเคยเจอบ้าง") -->
+<section class="scene" id="A">
+  <svg class="abs drum" viewBox="0 0 200 200">
+    <rect x="10" y="10" width="180" height="180" rx="26" fill="#2a2d2d"/>
+    <rect x="22" y="22" width="60" height="16" rx="6" fill="#3a3e3e"/>
+    <circle cx="160" cy="30" r="7" fill="#E5482F"/>
+    <circle cx="100" cy="112" r="70" fill="#1a1c1c" stroke="#555" stroke-width="8"/>
+    <g id="Adrum"><circle cx="100" cy="112" r="58" fill="#20383f"/>
+      <path d="M70 100 q15 -25 30 0 t30 0 v30 h-60z" fill="#e9e6df" opacity=".9"/>
+      <circle cx="100" cy="112" r="58" fill="none" stroke="#27A6CF" stroke-width="3" stroke-dasharray="6 10"/></g>
+  </svg>
+  <div class="abs count"><small class="th">ซัก</small><b id="Acount">×1</b></div>
+  <div class="abs full mask l1 th"><span>เสื้อยืดซัก 2 รอบ</span></div>
+  <div class="abs full mask l2 th"><span>แล้วบางยวบ!</span></div>
+  <div class="abs full q th"><span>ใครเคยเจอบ้าง?</span></div>
+</section>
+
+<!-- B: pain (4.16 / 6.04 / 7.58 / 8.66) -->
+<section class="scene" id="B">
+  <div class="abs full title th"><div class="mask"><span>ซื้อเสื้อ<em>โอเวอร์ไซซ์</em>มาใส่ทีไร...</span></div></div>
+  <div class="abs behind"></div>
+  <svg class="abs tee" viewBox="0 0 700 620" id="Btee">
+    <path d="M250 40 Q350 95 450 40 L640 130 L580 280 L520 250 L520 590 L180 590 L180 250 L120 280 L60 130 Z" fill="#f4f2ec" stroke="#cfcac0" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M250 40 Q350 110 450 40" fill="none" stroke="#cfcac0" stroke-width="6"/>
+  </svg>
+  <div class="abs pains th">
+    <div class="pain"><span class="cross"><svg width="34" height="34" viewBox="0 0 10 10"><path d="M2 2l6 6M8 2l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span>ผ้าบาง เห็นทะลุ</div>
+    <div class="pain"><span class="cross"><svg width="34" height="34" viewBox="0 0 10 10"><path d="M2 2l6 6M8 2l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span>ทรงไม่ตก</div>
+    <div class="pain"><span class="cross"><svg width="34" height="34" viewBox="0 0 10 10"><path d="M2 2l6 6M8 2l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span>ใส่แล้วไม่มั่นใจ</div>
+  </div>
+</section>
+
+<!-- C: reveal (10.66 "ตัวนี้", 11.46 "ไวบ์ดี", 12.12 "ลายคอร์ทคัลเชอร์") -->
+<section class="scene" id="C">
+  <div class="abs full now th">ตัวนี้!</div>
+  <div class="card"><img src="assets/back-black.jpg" alt=""></div>
+  <div class="abs full brandname sans">VIBEDEE</div>
+  <div class="abs full court serif">Court</div>
+  <div class="abs full culture">Culture</div>
+</section>
+
+<!-- D: fabric (13.48 cotton, 14.22 100%, 15.18 no.20, 15.42 หนา, 16.54 นุ่ม, 16.96 ไม่บาง) -->
+<section class="scene" id="D">
+  <div class="card"><img src="assets/front-white.jpg" alt=""></div>
+  <div class="abs lbl sans">PREMIUM COTTON</div>
+  <div class="abs big sans" id="Dpct">100%</div>
+  <div class="abs comb"><span class="chip">COMB No.20</span></div>
+  <div class="abs words th">
+    <div class="w"><span class="tick"><svg width="34" height="34" viewBox="0 0 10 10"><path d="M2 5.2l2 2 4-4.4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>หนา</div>
+    <div class="w"><span class="tick"><svg width="34" height="34" viewBox="0 0 10 10"><path d="M2 5.2l2 2 4-4.4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>นุ่ม</div>
+    <div class="w"><span class="tick"><svg width="34" height="34" viewBox="0 0 10 10"><path d="M2 5.2l2 2 4-4.4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>ไม่บาง</div>
+  </div>
+</section>
+
+<!-- E: boxy (17.30 ทรงบ็อกซี่, 18.48 ตกสวย) -->
+<section class="scene" id="E">
+  <div class="card"><img src="assets/front-black.jpg" alt=""></div>
+  <svg class="abs box" viewBox="0 0 960 960">
+    <rect id="Erect" x="200" y="150" width="560" height="660" rx="10" fill="none" stroke="#27A6CF" stroke-width="8" stroke-dasharray="28 18"/>
+    <g id="Earrows" stroke="#27A6CF" stroke-width="6" fill="#27A6CF">
+      <line x1="210" y1="860" x2="750" y2="860"/><path d="M200 860l22-14v28z"/><path d="M760 860l-22-14v28z"/>
+    </g>
+  </svg>
+  <div class="abs tag"><span class="chip">BOXY FIT</span></div>
+  <div class="abs full mask t1 th"><span>ทรงบ็อกซี่</span></div>
+  <div class="abs full t2 th"><span class="chip">ตกสวย ✓</span></div>
+</section>
+
+<!-- F: DTG (19.30 สกรีน DTG, 20.18 ลงเนื้อผ้าโดยตรง, 21.58 สีสด) -->
+<section class="scene" id="F">
+  <div class="card">
+    <img src="assets/back-black-gray.jpg" id="Fgray" alt="">
+    <img src="assets/back-black.jpg" id="Fcolor" alt="">
+    <div class="abs scan" id="Fscan"></div>
+  </div>
+  <div class="abs t3 th" id="Fpop">สีสด!</div>
+  <div class="abs full mask t1 th"><span>สกรีน <b>DTG</b></span></div>
+  <div class="abs full mask t2 th"><span>ลงเนื้อผ้าโดยตรง</span></div>
+</section>
+
+<!-- G: court print (22.36 ลายด้านหลัง, 23.16 สนาม, 23.56 เขียว, 23.84 ฟ้า, 24.36 เท่มาก) -->
+<section class="scene" id="G">
+  <div class="card"><img src="assets/back-black.jpg" alt=""></div>
+  <div class="abs wow th">เท่มาก!</div>
+  <div class="abs full mask t1 th"><span>ลายด้านหลังเป็นสนาม</span></div>
+  <div class="abs full mask t2 th"><span><i class="g" style="font-style:normal">สีเขียว</i><i class="b" style="font-style:normal">ฟ้า</i></span></div>
+  <div class="abs sw" style="left:405px;background:#4E9A84"></div>
+  <div class="abs sw" style="left:565px;background:#27A6CF"></div>
+</section>
+
+<!-- H: sport / street (25.64, 26.54, 27.44) -->
+<section class="scene" id="H">
+  <div class="card c1"><img src="assets/front-white.jpg" alt=""></div>
+  <div class="card c2"><img src="assets/back-black.jpg" alt=""></div>
+  <svg class="abs ball" id="Hball" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#D7F25A" stroke="#a9c43a" stroke-width="3"/>
+    <path d="M14 22 q30 28 0 56 M86 22 q-30 28 0 56" fill="none" stroke="#fff" stroke-width="5"/></svg>
+  <div class="abs mask t1 th"><span>ใครเล่นกีฬา</span></div>
+  <div class="abs mask t2 th"><span>หรือชอบลุคสตรีท</span></div>
+  <div class="abs full t3 th"><span>ต้องชอบ!</span></div>
+</section>
+
+<!-- I: colours (28.62 head, 29.36 ขาว, 29.78 ดำ) -->
+<section class="scene" id="I">
+  <div class="abs half" id="Iw" style="left:0;background:#fafafa"><img src="assets/front-white.jpg" alt=""><div class="abs lab th" style="color:var(--ink)">ขาว</div></div>
+  <div class="abs half" id="Ib" style="left:540px;background:#0b0b0b"><img src="assets/front-black.jpg" alt=""><div class="abs lab th" style="color:#fff">ดำ</div></div>
+  <div class="abs full head th"><span>มีทั้ง 2 สี</span></div>
+</section>
+
+<!-- J: size (30.40 ตั้งแต่ไซซ์ S, 31.44 ถึง 2XL, 32.38 ไซซ์ตรงตามตาราง, 33.66 ส่งจากกรุงเทพ) -->
+<section class="scene" id="J">
+  <div class="abs full head th">ไซซ์ <b>S – 2XL</b></div>
+  <div class="abs pills"><div class="pill">S</div><div class="pill">M</div><div class="pill">L</div><div class="pill">XL</div><div class="pill">2XL</div></div>
+  <div class="abs table"><img src="assets/sizechart-crop.jpg" alt=""></div>
+  <div class="abs full ok th">ไซซ์ตรงตามตาราง ✓</div>
+  <div class="abs full ship th"><span class="chip">
+    <svg width="64" height="64" viewBox="0 0 24 24"><path d="M2 6h11v9H2zM13 9h4l3 3v3h-7z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><circle cx="6" cy="17" r="2" fill="#fff"/><circle cx="17" cy="17" r="2" fill="#fff"/></svg>
+    ส่งจากกรุงเทพฯ</span></div>
+</section>
+
+<!-- K: promo (35.04 ตอนนี้มีโปร, 35.78 ลดราคา, 36.86 อยู่ไม่นาน) -->
+<section class="scene" id="K">
+  <div class="abs rays"></div>
+  <div class="abs full mask t1 th"><span>ตอนนี้กำลังมีโปร</span></div>
+  <div class="abs full sale">SALE</div>
+  <div class="abs full t2 th"><span>ลดราคาอยู่!</span></div>
+  <svg class="abs clock" viewBox="0 0 100 100"><circle cx="50" cy="54" r="40" fill="#fff"/><circle cx="50" cy="54" r="34" fill="none" stroke="#E5482F" stroke-width="4"/>
+    <rect x="42" y="4" width="16" height="10" rx="3" fill="#fff"/><g id="Khand"><line x1="50" y1="54" x2="50" y2="28" stroke="#121414" stroke-width="5" stroke-linecap="round"/></g><circle cx="50" cy="54" r="5" fill="#121414"/></svg>
+  <div class="abs full t3 th">โปรแบบนี้อยู่ไม่นานนะ!</div>
+</section>
+
+<!-- L: CTA (38.36 กดสั่งเลย, 39.46 รีบกดก่อนหมด) -->
+<section class="scene" id="L">
+  <div class="card c1"><img src="assets/front-white.jpg" alt=""></div>
+  <div class="card c2"><img src="assets/back-black.jpg" alt=""></div>
+  <div class="abs full logo1 sans">VIBEDEE</div>
+  <div class="abs full logo2 serif">Court Culture</div>
+  <div class="abs btn th">
+    <svg width="84" height="84" viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h11l2-8H7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="19.5" r="1.6" fill="#fff"/><circle cx="17" cy="19.5" r="1.6" fill="#fff"/></svg>
+    กดสั่งเลย!</div>
+  <div class="abs full hurry th">รีบกดก่อนหมด!</div>
+  <svg class="abs arrow" viewBox="0 0 24 24"><path d="M12 3v16m-7-7 7 7 7-7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</section>
+
+<div id="brand" class="sans">VIBEDEE</div>
+<canvas id="grain" width="540" height="960"></canvas>
+<div id="wipe"><div style="background:#2F6E5E"></div><div style="background:#27A6CF"></div><div style="background:#F2EFE8"></div></div>
+<div id="progress"></div>
+</div>
+<div id="hint">คลิกเพื่อเล่นใหม่ (มีเสียง) · ?t=วินาที เพื่อดูเฟรม</div>
+<audio id="vo" src="voiceover.wav" preload="auto"></audio>
+
+<script>
+(() => {
+// Scene windows (seconds) — cut points sit in the pauses of voiceover.wav
+const SC = { A:[0,4.1], B:[4.1,10.45], C:[10.45,13.42], D:[13.42,17.28], E:[17.28,19.2], F:[19.2,22.3],
+             G:[22.3,25.5], H:[25.5,28.55], I:[28.55,30.3], J:[30.3,34.95], K:[34.95,38.3], L:[38.3,42] };
+const DURATION = 42;
+window.TIMELINE = SC;
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const E = {
+  lin: t => t, out: t => 1 - Math.pow(1 - t, 3),
+  inOut: t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+  expo: t => t >= 1 ? 1 : 1 - Math.pow(2, -10 * t),
+  back: t => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); },
+};
+const P = (t, s, d, e = E.out) => e(clamp((t - s) / d));
+const css = (el, o) => { for (const k in o) el.style[k] = o[k]; };
+const rise = (el, t, s, d = .5) => { const sp = el.matches('.mask') ? el.firstElementChild : el.querySelector('.mask>span') || el;
+  sp.style.transform = `translateY(${(1 - P(t, s, d, E.expo)) * 115}%)`; };
+const pop = (el, t, s, d = .45, from = 0, extra = '') => { const k = P(t, s, d, E.back);
+  css(el, { transform: `scale(${lerp(from, 1, k)}) ${extra}`, opacity: clamp((t - s) / .12) }); };
+const slide = (el, t, s, dx = 0, dy = 80, d = .5) => { const k = P(t, s, d, E.expo);
+  css(el, { transform: `translate(${(1 - k) * dx}px,${(1 - k) * dy}px)`, opacity: clamp((t - s) / .15) }); };
+const cardIn = (el, t, s, extra = '') => { const k = P(t, s, .6, E.expo);
+  css(el, { clipPath: `inset(${(1 - k) * 100}% 0 0 0 round 44px)`, transform: `translateY(${(1 - k) * 60}px) ${extra}` }); };
+const kb = (img, t, a, b, from, to) => { const k = P(t, a, b - a, E.lin);
+  img.style.transform = `translate(${lerp(from[1], to[1], k)}px,${lerp(from[2], to[2], k)}px) scale(${lerp(from[0], to[0], k)})`; };
+
+const grain = $('#grain'), g = grain.getContext('2d'), tiles = [];
+for (let k = 0; k < 6; k++) { const id = g.createImageData(540, 960); let s = 99 + k * 777;
+  for (let i = 0; i < id.data.length; i += 4) { s = (s * 16807) % 2147483647; const v = s / 2147483647 * 255; id.data[i] = id.data[i+1] = id.data[i+2] = v; id.data[i+3] = 255; }
+  tiles.push(id); }
+
+function render(t) {
+  t = clamp(t, 0, DURATION - 1e-6);
+  let cur = null;
+  for (const id in SC) { const on = t >= SC[id][0] && t < SC[id][1]; $('#' + id).style.visibility = on ? 'visible' : 'hidden'; if (on) cur = id; }
+  const sc = $('#' + cur);
+
+  if (cur === 'A') {
+    $('#Adrum').setAttribute('transform', `rotate(${t * 420} 100 112)`);
+    const drum = $('.drum', sc); pop(drum, t, 0, .5, .6, `rotate(${Math.sin(t * 30) * (t > 1 && t < 2.6 ? 1.5 : .4)}deg)`);
+    const c = $('.count', sc); $('#Acount').textContent = t < 1.4 ? '×1' : '×2';
+    pop(c, t, .5, .4, 0, `scale(${t > 1.4 && t < 1.7 ? 1.25 : 1})`);
+    rise($('.l1', sc), t, .32); rise($('.l2', sc), t, 1.8);
+    // "บางยวบ" droops
+    const l2 = $('.l2 span', sc); if (t > 2.1) l2.style.transform += ` skewX(${Math.sin((t - 2.1) * 6) * 6}deg) scaleY(${1 - .06 * Math.sin((t - 2.1) * 6)})`;
+    const q = $('.q span', sc); pop(q, t, 2.92, .4, .3, `rotate(${-3 + Math.sin(t * 20) * (t < 3.4 ? 2 : 0)}deg)`);
+  }
+
+  if (cur === 'B') {
+    rise($('.title', sc), t, 4.16);
+    const tee = $('#Btee'), behind = $('.behind', sc);
+    pop(tee, t, 4.3, .5, .7);
+    behind.style.opacity = P(t, 4.3, .3);
+    // see-through at 6.04, droop at 7.58
+    const thin = P(t, 6.04, .6, E.inOut), sag = P(t, 7.58, .6, E.back);
+    tee.style.opacity = lerp(1, .38, thin);
+    tee.style.transform += ` scaleY(${1 + sag * .06}) skewX(${Math.sin((t - 7.58) * 5) * 4 * sag}deg)`;
+    tee.style.transformOrigin = '50% 0%';
+    $$('.pain', sc).forEach((p, i) => slide(p, t, [6.04, 7.58, 8.66][i], -500, 0, .45));
+    if (t > 9.9) css(sc, { filter: `brightness(${1 - P(t, 9.9, .5) * .6})` }); else sc.style.filter = '';
+  }
+
+  if (cur === 'C') {
+    const now = $('.now', sc); pop(now, t, 10.66, .4, 2.2);
+    const card = $('.card', sc); cardIn(card, t, 10.55, `scale(${lerp(1.06, 1, P(t, 10.55, 2.8))})`);
+    kb($('img', card), t, 10.55, 13.4, [1.25, 0, 60], [1.05, 0, 0]);
+    const bn = $('.brandname', sc), k1 = P(t, 11.46, .5, E.expo);
+    css(bn, { opacity: k1, letterSpacing: `${lerp(.6, .2, k1)}em` });
+    slide($('.court', sc), t, 12.12, -300, 0, .5); slide($('.culture', sc), t, 12.45, 300, 0, .5);
+  }
+
+  if (cur === 'D') {
+    const card = $('.card', sc); cardIn(card, t, 13.42);
+    kb($('img', card), t, 13.42, 17.3, [1.1, 0, 0], [1.9, -304, 209]);
+    css($('.lbl', sc), { opacity: P(t, 13.5, .4) });
+    const kp = P(t, 14.1, .7, E.out); $('#Dpct').textContent = Math.round(100 * kp) + '%';
+    pop($('#Dpct'), t, 14.1, .4, .5);
+    pop($('.comb', sc), t, 15.18, .45, 0, 'rotate(-4deg)');
+    $$('.w', sc).forEach((w, i) => pop(w, t, [15.42, 16.54, 16.96][i], .4, .2));
+  }
+
+  if (cur === 'E') {
+    const card = $('.card', sc); cardIn(card, t, 17.28);
+    kb($('img', card), t, 17.28, 19.2, [1.12, 0, 0], [1.0, 0, 0]);
+    const r = $('#Erect'), per = 2 * (560 + 660), kd = P(t, 17.4, .8, E.inOut);
+    r.style.strokeDasharray = `${per * kd} ${per}`; r.style.opacity = t > 17.4 ? 1 : 0;
+    $('#Earrows').style.opacity = P(t, 18.0, .3);
+    pop($('.tag', sc), t, 17.6, .4, 0, 'rotate(6deg)');
+    rise($('.t1', sc), t, 17.3); pop($('.t2', sc), t, 18.48, .4, .3);
+  }
+
+  if (cur === 'F') {
+    const card = $('.card', sc); cardIn(card, t, 19.2);
+    // zoom on the court graphic, scanning print head reveals colour
+    const z = `translate(-480px,-330px) scale(2)`;
+    const zk = P(t, 19.2, 3.1, E.lin), sc2 = lerp(2.1, 1.75, zk);
+    const tr = `translate(${480 - 480 * sc2}px,${480 - 375 * sc2}px) scale(${sc2})`;
+    $('#Fgray').style.transform = tr; $('#Fcolor').style.transform = tr;
+    const ks = P(t, 19.4, 1.9, E.inOut);
+    $('#Fcolor').style.clipPath = `inset(0 0 ${(1 - ks) * 100}% 0)`;
+    css($('#Fscan'), { top: `${ks * 960 - 7}px`, opacity: ks > 0 && ks < 1 ? 1 : 0 });
+    rise($('.t1', sc), t, 19.3); rise($('.t2', sc), t, 20.18);
+    pop($('#Fpop'), t, 21.58, .45, 0, `rotate(${-8 + Math.sin(t * 6) * 3}deg)`);
+  }
+
+  if (cur === 'G') {
+    const card = $('.card', sc); cardIn(card, t, 22.3);
+    const k = P(t, 22.3, 3.2, E.inOut), s = lerp(1.9, 1.04, k);
+    $('img', card).style.transform = `translate(${480 - 480 * s}px,${500 - lerp(375, 500, k) * s}px) scale(${s})`;
+    rise($('.t1', sc), t, 22.36); rise($('.t2', sc), t, 23.16);
+    $$('.sw', sc).forEach((w, i) => pop(w, t, [23.56, 23.84][i], .4));
+    pop($('.wow', sc), t, 24.36, .4, 0, `rotate(${6 + Math.sin(t * 8) * 3}deg)`);
+  }
+
+  if (cur === 'H') {
+    const c1 = $('.c1', sc), c2 = $('.c2', sc);
+    const k1 = P(t, 25.5, .6, E.back), k2 = P(t, 25.75, .6, E.back);
+    css(c1, { transform: `translateX(${(1 - k1) * -700}px) rotate(${-6 + Math.sin(t * 2) * 1.5}deg)` });
+    css(c2, { transform: `translateX(${(1 - k2) * 700}px) rotate(${5 - Math.sin(t * 2) * 1.5}deg)` });
+    // bouncing ball across the top
+    const bk = clamp((t - 25.6) / 2.9), bx = lerp(-140, 1100, bk), by = 140 + (1 - Math.abs(Math.sin(bk * Math.PI * 3))) * 140;
+    css($('#Hball'), { left: bx + 'px', top: by + 'px', transform: `rotate(${bk * 900}deg)` });
+    rise($('.t1', sc), t, 25.64); rise($('.t2', sc), t, 26.54);
+    const t3 = $('.t3 span', sc); pop(t3, t, 27.44, .45, .2, `rotate(${-3 + Math.sin(t * 10) * 1.5}deg)`);
+  }
+
+  if (cur === 'I') {
+    const w = $('#Iw'), b = $('#Ib');
+    const kw = P(t, 29.2, .5, E.expo), kbb = P(t, 29.65, .5, E.expo);
+    w.style.transform = `translateY(${(1 - kw) * -1920}px)`; b.style.transform = `translateY(${(1 - kbb) * 1920}px)`;
+    $('img', w).style.transform = `scale(${lerp(1.1, 1, P(t, 29.2, 1.1))})`;
+    $('img', b).style.transform = `scale(${lerp(1.1, 1, P(t, 29.65, 1.1))})`;
+    pop($('.head span', sc), t, 28.62, .45, .3);
+    sc.style.background = '#F2EFE8';
+  }
+
+  if (cur === 'J') {
+    rise($('.head', sc), t, 30.35); pop($('.head', sc), t, 30.35, .4, .6);
+    $$('.pill', sc).forEach((p, i) => {
+      const s = [30.84, 31.0, 31.15, 31.3, 31.44][i]; const k = P(t, s, .35, E.back);
+      const on = t >= s;
+      css(p, { transform: `translateY(${(1 - k) * 40}px) scale(${lerp(.6, 1, k)})`, opacity: clamp((t - s + .2) / .2) * .7 + .3,
+        background: on ? 'var(--green)' : '#fff', color: on ? '#fff' : '#aaa', borderColor: on ? 'var(--green)' : '#e3e0d8' });
+    });
+    const tb = $('.table', sc), kt = P(t, 32.25, .55, E.expo);
+    css(tb, { transform: `translateY(${(1 - kt) * 300}px) scale(${lerp(.9, 1, kt)})`, opacity: clamp((t - 32.25) / .15) });
+    pop($('.ok', sc), t, 32.45, .4, .5);
+    pop($('.ship', sc), t, 33.66, .45, .2);
+  }
+
+  if (cur === 'K') {
+    $('.rays', sc).style.transform = `rotate(${t * 20}deg)`;
+    rise($('.t1', sc), t, 35.04);
+    const ks = P(t, 35.6, .45, E.back), beat = t > 36.2 ? 1 + .04 * Math.abs(Math.sin((t - 36.2) * 5)) : 1;
+    css($('.sale', sc), { transform: `scale(${lerp(2.4, 1, ks) * beat})`, opacity: clamp((t - 35.6) / .1) });
+    pop($('.t2 span', sc), t, 35.78, .45, .3, 'rotate(-3deg)');
+    pop($('.clock', sc), t, 36.86, .45, 0);
+    $('#Khand').setAttribute('transform', `rotate(${(t - 36.86) * 720} 50 54)`);
+    rise($('.t3', sc), t, 37.0); const t3 = $('.t3', sc); t3.style.opacity = P(t, 37.0, .2);
+    t3.style.transform = `translateX(${t > 37.4 ? Math.sin(t * 40) * 4 : 0}px)`;
+  }
+
+  if (cur === 'L') {
+    const c1 = $('.c1', sc), c2 = $('.c2', sc);
+    const k1 = P(t, 38.3, .6, E.back), k2 = P(t, 38.45, .6, E.back);
+    css(c1, { transform: `translateY(${(1 - k1) * -900}px) rotate(${-7 + Math.sin(t * 2) * 1.2}deg)` });
+    css(c2, { transform: `translateY(${(1 - k2) * -900}px) rotate(${6 - Math.sin(t * 2) * 1.2}deg)` });
+    const kl = P(t, 38.5, .6, E.expo); css($('.logo1', sc), { opacity: kl, letterSpacing: `${lerp(.6, .24, kl)}em` });
+    slide($('.logo2', sc), t, 38.7, 0, 40, .5);
+    const btn = $('.btn', sc); const kbn = P(t, 38.36, .45, E.back);
+    css(btn, { transform: `scale(${kbn * (t > 38.9 ? 1 + .05 * Math.abs(Math.sin((t - 38.9) * 4.5)) : 1)})` });
+    pop($('.hurry', sc), t, 39.46, .4, .4, `translateX(${t > 39.9 ? Math.sin(t * 35) * 5 : 0}px)`);
+    css($('.arrow', sc), { opacity: P(t, 39.6, .3), transform: `translateY(${Math.abs(Math.sin(t * 5)) * 26}px)` });
+  }
+
+  $('#brand').style.opacity = ['D', 'E', 'G', 'J'].includes(cur) ? .9 : 0;
+  $('#progress').style.width = (t / DURATION * 100) + '%';
+  g.putImageData(tiles[Math.floor(t * 24) % tiles.length], 0, 0);
+  let wx = 200; const cuts = Object.values(SC).map(v => v[0]).filter(v => v > 0);
+  for (const c of cuts) { const k = (t - (c - .2)) / .4; if (k >= 0 && k <= 1) wx = lerp(-150, 110, E.inOut(k)); }
+  const w = $('#wipe'); w.style.transform = `translateX(${wx}%) skewX(-12deg)`; w.style.visibility = wx > 150 ? 'hidden' : 'visible';
+}
+
+async function ready() {
+  await document.fonts.ready;
+  await Promise.all(['400','500','600','700','800','900'].map(w => document.fonts.load(`${w} 40px Kanit`, 'กขค'))
+    .concat(['700','800','900'].map(w => document.fonts.load(`${w} 40px "Inter Tight"`, 'A')))
+    .concat([document.fonts.load('italic 40px "Instrument Serif"', 'C')]));
+  await Promise.all($$('img').map(i => i.decode().catch(() => {})));
+}
+async function renderAt(t) { render(t); return true; }
+window.DURATION = DURATION; window.ready = ready; window.renderAt = renderAt;
+
+const params = new URLSearchParams(location.search);
+const fit = () => { if (params.has('render')) return; const s = Math.min(innerWidth / 1080, (innerHeight - 30) / 1920); $('#stage').style.transform = `scale(${s})`; };
+addEventListener('resize', fit); fit();
+if (params.has('render')) { $('#hint').remove(); document.body.style.display = 'block'; }
+else if (params.has('t')) ready().then(() => render(+params.get('t')));
+else ready().then(() => {
+  const vo = $('#vo'); let t0 = performance.now();
+  const restart = () => { t0 = performance.now(); vo.currentTime = 0; vo.play().catch(() => {}); };
+  $('#stage').addEventListener('click', restart);
+  const loop = now => { const t = (now - t0) / 1000; if (t > DURATION) restart(); render(t % DURATION); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+});
+})();
+</script>
+</body>
+</html>
