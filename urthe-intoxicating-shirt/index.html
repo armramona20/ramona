@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>URTHE Intoxicating Shirts</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+  :root{
+    --orange:#EE4D2D; --orange2:#FF7A45; --ink:#111112; --char:#2E2F31;
+    --bone:#EDEAE4; --brown:#5B4A3E; --white:#fff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#000;height:100%;overflow:hidden}
+  body{display:flex;align-items:center;justify-content:center;font-family:'Kanit',sans-serif;color:#fff}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--ink);transform-origin:center center;flex:none}
+  .scene{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+  .abs{position:absolute}
+  .cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .en{font-family:'Anton',sans-serif;font-weight:400;letter-spacing:.01em;line-height:.9}
+  .th{font-family:'Kanit',sans-serif}
+  .mask{overflow:hidden;display:block}
+  .mask>span{display:inline-block;will-change:transform}
+  .card{position:absolute;overflow:hidden;border-radius:40px;box-shadow:0 40px 80px rgba(0,0,0,.45)}
+  .card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform}
+  .chip{display:inline-flex;align-items:center;gap:14px;padding:14px 30px;border-radius:999px;font-weight:600;font-size:40px;white-space:nowrap}
+
+  /* global overlays */
+  #grain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.08;mix-blend-mode:overlay;image-rendering:pixelated}
+  #vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.45) 100%)}
+  #wipe{position:absolute;top:-10%;left:0;width:150%;height:120%;pointer-events:none;display:flex}
+  #wipe div{flex:1}
+  #brandTag{position:absolute;top:70px;left:64px;font-size:44px;letter-spacing:.12em}
+  #progress{position:absolute;top:0;left:0;height:10px;background:var(--orange)}
+
+  /* S1 hook */
+  #s1 .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,0) 30%,rgba(0,0,0,.15) 50%,rgba(0,0,0,.85) 85%)}
+  #s1 .l1{left:70px;top:1110px;font-size:150px;font-weight:900;line-height:1.15}
+  #s1 .l2{left:62px;top:1300px}
+  #s1 .l2 span{background:var(--orange);color:#fff;font-size:140px;font-weight:900;padding:0 34px;line-height:1.2;border-radius:18px}
+  #s1 .l3{left:74px;top:1530px;font-size:40px;letter-spacing:.32em;font-weight:500;color:var(--bone)}
+  #s1 .flash{left:70px;top:190px}
+
+  /* S2 title */
+  #s2{background:#141414}
+  #s2 .bgtext{left:0;white-space:nowrap;font-size:420px;color:transparent;-webkit-text-stroke:3px rgba(255,255,255,.10)}
+  #s2 .badge{width:250px;height:250px;right:110px;top:250px}
+  #s2 .t1{left:0;width:100%;text-align:center;top:1300px;font-size:300px}
+  #s2 .t1 span{display:inline-block}
+  #s2 .t2{left:0;width:100%;text-align:center;top:1590px;font-size:84px;color:var(--orange);letter-spacing:.14em}
+  #s2 .t3{left:0;width:100%;text-align:center;top:1700px;font-size:50px;font-weight:500;color:var(--bone)}
+
+  /* feature scenes */
+  .feat{background:#151516}
+  .feat .num{left:58px;top:1190px;font-size:250px;color:transparent;-webkit-text-stroke:4px var(--orange)}
+  .feat .ft{left:70px;top:1440px;font-size:96px;font-weight:800;line-height:1.1}
+  .feat .fd{left:72px;top:1580px;font-size:50px;font-weight:400;line-height:1.35;color:#d9d6d0}
+  .feat .chips{left:330px;top:1250px;display:flex;flex-direction:column;gap:18px}
+  .feat .chips .chip{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);font-size:38px}
+  .feat .dot{width:16px;height:16px;border-radius:50%;background:var(--orange)}
+  .ring{position:absolute;border:6px solid #fff;border-radius:50%;box-shadow:0 0 0 4px rgba(238,77,45,.8)}
+
+  /* S6 colors */
+  #s6{background:var(--bone);color:var(--ink)}
+  #s6 .h{left:0;width:100%;text-align:center;top:190px;font-size:120px;font-weight:900}
+  #s6 .h b{color:var(--orange)}
+  #s6 .sub{left:0;width:100%;text-align:center;top:360px;font-size:46px;font-weight:500;color:#555}
+  #s6 .cc{position:absolute;width:470px;height:560px;background:#fff;border-radius:36px;box-shadow:0 20px 50px rgba(0,0,0,.12);overflow:hidden;border:6px solid transparent}
+  #s6 .cc img{position:absolute;left:10px;top:30px;width:440px;height:394px;object-fit:cover}
+  #s6 .cc .lb{position:absolute;left:0;right:0;bottom:30px;display:flex;align-items:center;justify-content:center;gap:16px;font-size:44px;font-weight:700}
+  #s6 .cc .lb i{width:38px;height:38px;border-radius:50%;border:3px solid #ccc;display:inline-block}
+  #s6 .cc .lb small{font-size:32px;font-weight:400;color:#888}
+  #s6 .foot{left:0;width:100%;text-align:center;top:1720px;font-size:50px;font-weight:600}
+
+  /* S7 size */
+  #s7{background:#151516}
+  #s7 .h{left:0;width:100%;text-align:center;top:170px;font-size:110px;font-weight:900}
+  #s7 .h b{color:var(--orange);font-family:'Anton';font-weight:400;letter-spacing:.03em}
+  #s7 .sc{left:80px;top:400px;width:920px;height:660px;background:#fff;border-radius:40px;overflow:hidden}
+  #s7 .sc img{position:absolute;left:-12px;top:-60px;width:944px}
+  #s7 .stat{top:1140px;width:440px;height:400px;border-radius:40px;background:#232325;border:3px solid #3a3a3d;text-align:center;padding-top:40px}
+  #s7 .stat .k{font-size:50px;font-weight:600;color:#bbb}
+  #s7 .stat .v{font-size:200px;color:#fff;line-height:1.05;white-space:nowrap}
+  #s7 #s7b{font-size:150px;line-height:1.4}
+  #s7 .stat .u{font-size:40px;color:var(--orange);font-weight:600}
+  #s7 .note{left:0;width:100%;text-align:center;top:1620px;font-size:46px;color:#cfcac2}
+
+  /* S8 price */
+  #s8{background:var(--orange)}
+  #s8 .rays{left:50%;top:760px;width:3000px;height:3000px;margin:-1500px 0 0 -1500px;border-radius:50%;
+    background:repeating-conic-gradient(rgba(255,255,255,.13) 0deg 9deg,rgba(255,255,255,0) 9deg 18deg)}
+  #s8 .fs{left:0;width:100%;text-align:center;top:200px;font-size:150px;white-space:nowrap;color:#fff;text-shadow:0 10px 0 rgba(0,0,0,.18)}
+  #s8 .fs em{font-style:normal;color:#FFE14D}
+  #s8 .lbl{left:0;width:100%;text-align:center;top:420px;font-size:56px;font-weight:600}
+  #s8 .price{left:0;width:100%;text-align:center;top:500px;font-size:400px;color:#fff;text-shadow:0 18px 0 rgba(120,20,0,.35)}
+  #s8 .price small{font-size:220px;vertical-align:top;position:relative;top:40px;margin-right:8px}
+  #s8 .chips{left:0;width:100%;top:970px;display:flex;flex-direction:column;align-items:center;gap:22px}
+  #s8 .chip{background:#fff;color:var(--orange);font-size:46px;box-shadow:0 10px 0 rgba(0,0,0,.12)}
+  #s8 .chip.dark{background:var(--ink);color:#fff}
+  #s8 .prod{left:190px;top:1200px;width:700px;height:620px;background:#fff;border-radius:44px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.25)}
+  #s8 .prod img{position:absolute;left:-40px;top:-130px;width:780px}
+
+  /* S9 cta */
+  #s9 .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.25) 35%,rgba(0,0,0,.75) 75%,rgba(0,0,0,.9))}
+  #s9 .logo{left:0;width:100%;text-align:center;top:180px;font-size:200px;letter-spacing:.06em}
+  #s9 .sub{left:0;width:100%;text-align:center;top:390px;font-size:60px;color:var(--orange);letter-spacing:.14em}
+  #s9 .big{left:0;width:100%;text-align:center;top:1010px;font-size:150px;font-weight:900}
+  #s9 .btn{left:150px;top:1230px;width:780px;height:170px;border-radius:999px;background:var(--orange);display:flex;align-items:center;justify-content:center;gap:24px;font-size:66px;font-weight:800;box-shadow:0 16px 0 #a52a12}
+  #s9 .link{left:0;width:100%;text-align:center;top:1450px;font-size:46px;font-weight:500;color:#fff}
+  #s9 .link b{background:rgba(255,255,255,.14);padding:8px 26px;border-radius:14px;font-weight:600;letter-spacing:.02em}
+  #s9 .arrow{left:500px;top:1560px;width:80px;height:80px}
+
+  #hint{position:fixed;bottom:12px;left:0;right:0;text-align:center;font:14px sans-serif;color:#888}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- S1 HOOK -->
+  <section class="scene" id="s1" data-start="0" data-end="4.5">
+    <img class="cover foot" data-src0="0" alt="">
+    <div class="shade"></div>
+    <div class="abs flash chip" style="background:var(--orange);font-size:42px;font-weight:700">
+      <svg width="34" height="40" viewBox="0 0 24 28"><path d="M14 0 2 16h8l-2 12 12-16h-8z" fill="#FFE14D"/></svg>
+      FLASH SALE ฿360
+    </div>
+    <div class="abs mask l1 th"><span>เชิ้ตตัวเดียว</span></div>
+    <div class="abs mask l2 th"><span>เท่ได้ทุกลุค</span></div>
+    <div class="abs mask l3 th"><span>URTHE · INTOXICATING SHIRTS</span></div>
+  </section>
+
+  <!-- S2 TITLE -->
+  <section class="scene" id="s2" data-start="4.5" data-end="10">
+    <div class="abs en bgtext" style="top:40px">URTHE URTHE URTHE URTHE</div>
+    <div class="abs en bgtext" style="top:640px">URTHE URTHE URTHE URTHE</div>
+    <div class="card" style="left:200px;top:180px;width:680px;height:1100px;border-radius:44px">
+      <img class="foot" data-src0="12.2" alt="">
+    </div>
+    <svg class="abs badge" viewBox="0 0 200 200">
+      <defs><path id="circ" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"/></defs>
+      <circle cx="100" cy="100" r="98" fill="#EE4D2D"/>
+      <text font-family="Anton" font-size="25" letter-spacing="5" fill="#fff"><textPath href="#circ">OVERSIZE FIT • NEW DROP • </textPath></text>
+      <text x="100" y="112" text-anchor="middle" font-family="Anton" font-size="44" fill="#fff">50"</text>
+    </svg>
+    <div class="abs en t1" id="s2logo"></div>
+    <div class="abs en t2">INTOXICATING SHIRTS</div>
+    <div class="abs th t3">เสื้อเชิ้ตแขนสั้น ทรงโอเวอร์ไซซ์</div>
+  </section>
+
+  <!-- S3 FABRIC -->
+  <section class="scene feat" id="s3" data-start="10" data-end="15.5">
+    <div class="card" style="left:60px;top:150px;width:960px;height:1000px"><img src="assets/collar-closeup.jpg" alt=""></div>
+    <div class="abs en num">01</div>
+    <div class="abs chips">
+      <div class="chip"><i class="dot"></i>ปกเชิ้ตคลาสสิก</div>
+      <div class="chip"><i class="dot"></i>ป้ายแบรนด์ URTHE</div>
+    </div>
+    <div class="abs mask ft th"><span>ผ้าเท็กซ์เจอร์มีมิติ</span></div>
+    <div class="abs fd th"><div class="mask"><span>ผิวผ้าย่นนิด ๆ ดูมีสไตล์</span></div><div class="mask"><span>ลุคมินิมอล แต่ไม่จืด</span></div></div>
+  </section>
+
+  <!-- S4 METAL TAG -->
+  <section class="scene feat" id="s4" data-start="15.5" data-end="21">
+    <div class="card" style="left:60px;top:150px;width:960px;height:1000px">
+      <img class="foot" id="s4foot" alt="">
+      <img id="s4img" src="assets/metal-tag.jpg" alt="">
+    </div>
+    <div class="abs en num">02</div>
+    <div class="abs chips">
+      <div class="chip"><i class="dot"></i>ติดเหนือกระเป๋าอก</div>
+      <div class="chip"><i class="dot"></i>งานโลหะเงา</div>
+    </div>
+    <div class="abs mask ft th"><span>ป้ายโลหะ <b class="en" style="font-weight:400;color:var(--orange);letter-spacing:.03em">YOUARETHE</b></span></div>
+    <div class="abs fd th"><div class="mask"><span>ดีเทลเล็ก ๆ ที่หน้าอก</span></div><div class="mask"><span>เพิ่มความพรีเมียมให้ทั้งลุค</span></div></div>
+  </section>
+
+  <!-- S5 BACK -->
+  <section class="scene feat" id="s5" data-start="21" data-end="26.5">
+    <div class="card" style="left:60px;top:150px;width:960px;height:1000px">
+      <div id="s5zoom" class="abs" style="left:0;top:0;width:960px;height:960px;transform-origin:0 0">
+        <img src="assets/back-embroidery.jpg" alt="" style="position:absolute;left:0;top:0;width:960px;height:960px">
+        <div class="ring" id="s5ring"></div>
+      </div>
+      <img class="foot" id="s5foot" data-src0="4.07" alt="">
+    </div>
+    <div class="abs en num">03</div>
+    <div class="abs chips">
+      <div class="chip"><i class="dot"></i>ปักลายด้านหลัง</div>
+      <div class="chip"><i class="dot"></i>จีบกลางหลัง</div>
+    </div>
+    <div class="abs mask ft th"><span>ด้านหลังก็ไม่ธรรมดา</span></div>
+    <div class="abs fd th"><div class="mask"><span>ปักโลโก้สามเหลี่ยม + จีบกลางหลัง</span></div><div class="mask"><span>ทิ้งตัวสวย ใส่แล้วดูพลิ้ว</span></div></div>
+  </section>
+
+  <!-- S6 COLORS -->
+  <section class="scene" id="s6" data-start="26.5" data-end="32">
+    <div class="abs h th">มีให้เลือก <b>4</b> สี</div>
+    <div class="abs sub th">แมทช์ง่าย ใส่ได้ทุกวัน</div>
+    <div class="cc" style="left:55px;top:470px"><img src="assets/color-charcoal.jpg" alt=""><div class="lb th"><i style="background:#3f4042"></i>เทา <small>Charcoal</small></div></div>
+    <div class="cc" style="left:555px;top:470px"><img src="assets/color-black.jpg" alt=""><div class="lb th"><i style="background:#111"></i>ดำ <small>Black</small></div></div>
+    <div class="cc" style="left:55px;top:1080px"><img src="assets/color-brown.jpg" alt=""><div class="lb th"><i style="background:#5b4a3e"></i>น้ำตาล <small>Brown</small></div></div>
+    <div class="cc" style="left:555px;top:1080px"><img src="assets/color-white.jpg" alt=""><div class="lb th"><i style="background:#fff"></i>ขาว <small>White</small></div></div>
+    <div class="abs foot th">เลือกสีที่ใช่ แล้วจัดเลย!</div>
+  </section>
+
+  <!-- S7 SIZE -->
+  <section class="scene" id="s7" data-start="32" data-end="36.5">
+    <div class="abs h th">ไซซ์ <b>OVERSIZE</b></div>
+    <div class="abs sc"><img src="assets/sizechart.jpg" alt=""></div>
+    <div class="abs stat" style="left:80px"><div class="k th">รอบอก</div><div class="v en" id="s7a">50"</div><div class="u th">นิ้ว</div></div>
+    <div class="abs stat" style="left:560px"><div class="k th">ความยาว</div><div class="v en" id="s7b">26-27"</div><div class="u th">นิ้ว</div></div>
+    <div class="abs note th">ทรงหลวมสบาย ใส่ปล่อยชายก็เท่</div>
+  </section>
+
+  <!-- S8 PRICE -->
+  <section class="scene" id="s8" data-start="36.5" data-end="41.5">
+    <div class="abs rays"></div>
+    <div class="abs en fs"><em>⚡</em>FLASH SALE<em>⚡</em></div>
+    <div class="abs lbl th">ราคาหลังใช้โค้ดส่วนลด เหลือเพียง</div>
+    <div class="abs en price"><small>฿</small><span id="s8n">360</span></div>
+    <div class="abs chips">
+      <div class="chip th">ขายแล้ว 1,000+ ชิ้น</div>
+      <div class="chip dark th">ผ่อน SPayLater ฿32.49 x 12 เดือน</div>
+    </div>
+    <div class="abs prod"><img src="assets/gray-frontback.jpg" alt=""></div>
+  </section>
+
+  <!-- S9 CTA -->
+  <section class="scene" id="s9" data-start="41.5" data-end="45">
+    <img class="cover foot" data-src0="8.23" alt="">
+    <div class="shade"></div>
+    <div class="abs en logo">URTHE</div>
+    <div class="abs en sub">INTOXICATING SHIRTS</div>
+    <div class="abs mask big th"><span>สั่งเลยวันนี้!</span></div>
+    <div class="abs btn th">
+      <svg width="70" height="70" viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h11l2-8H7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="19.5" r="1.6" fill="#fff"/><circle cx="17" cy="19.5" r="1.6" fill="#fff"/></svg>
+      กดตะกร้าเลย ฿360
+    </div>
+    <div class="abs link th">ช้อปที่ Shopee <b>s.shopee.co.th/8KrFafsli4</b></div>
+    <svg class="abs arrow" viewBox="0 0 24 24"><path d="M12 3v16m-7-7 7 7 7-7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </section>
+
+  <!-- global overlays -->
+  <div id="brandTag" class="en">URTHE</div>
+  <canvas id="grain" width="540" height="960"></canvas>
+  <div id="vignette"></div>
+  <div id="wipe"><div style="background:#EE4D2D"></div><div style="background:#111"></div><div style="background:#EDEAE4"></div></div>
+  <div id="progress"></div>
+</div>
+<div id="hint">คลิกเพื่อเล่นใหม่ · ?t=วินาที เพื่อดูเฟรม</div>
+
+<script>
+(() => {
+const DURATION = 45, FPS_SRC = 30, SRC_FRAMES = 518;
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const E = {
+  lin: t => t,
+  out: t => 1 - Math.pow(1 - t, 3),
+  in: t => t * t * t,
+  inOut: t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+  expo: t => t >= 1 ? 1 : 1 - Math.pow(2, -10 * t),
+  back: t => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); },
+};
+// progress of tween starting at s for d seconds
+const P = (t, s, d, e = E.out) => e(clamp((t - s) / d));
+const css = (el, o) => { for (const k in o) el.style[k] = o[k]; };
+const footSrc = sec => {
+  const i = clamp(Math.round(sec * FPS_SRC) + 1, 1, SRC_FRAMES);
+  return 'assets/footage/' + String(i).padStart(4, '0') + '.jpg';
+};
+const setFoot = (img, sec) => { const s = footSrc(sec); if (img.getAttribute('src') !== s) img.setAttribute('src', s); };
+
+// build per-letter logo for S2
+const logo = $('#s2logo');
+'URTHE'.split('').forEach(ch => { const m = document.createElement('span'); m.className = 'mask'; m.style.display = 'inline-block';
+  const s = document.createElement('span'); s.textContent = ch; m.appendChild(s); logo.appendChild(m); });
+
+// grain tiles
+const grain = $('#grain'), gctx = grain.getContext('2d');
+const tiles = [];
+for (let k = 0; k < 6; k++) {
+  const id = gctx.createImageData(540, 960);
+  let seed = 1234 + k * 999;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < id.data.length; i += 4) { const v = rnd() * 255; id.data[i] = id.data[i + 1] = id.data[i + 2] = v; id.data[i + 3] = 255; }
+  tiles.push(id);
+}
+
+const scenes = $$('.scene').map(el => ({ el, start: +el.dataset.start, end: +el.dataset.end }));
+const cuts = scenes.slice(1).map(s => s.start);
+
+// mask-reveal helper: span slides up from below
+const rise = (wrap, t, s, d = .55) => {
+  const k = P(t, s, d, E.expo);
+  const sp = wrap.matches('.mask') ? wrap.firstElementChild : wrap;
+  sp.style.transform = `translateY(${(1 - k) * 110}%)`;
+};
+const pop = (el, t, s, d = .5, from = .6) => {
+  const k = P(t, s, d, E.back);
+  css(el, { transform: `scale(${lerp(from, 1, k)})`, opacity: clamp((t - s) / (d * .4)) });
+};
+const featureText = (sc, t, t0) => {
+  const num = $('.num', sc), ft = $('.ft', sc), fds = $$('.fd .mask', sc), chips = $$('.chips .chip', sc);
+  const kn = P(t, t0 + .25, .6, E.expo);
+  css(num, { transform: `translateX(${(1 - kn) * -200}px)`, opacity: kn });
+  rise(ft, t, t0 + .45);
+  fds.forEach((m, i) => rise(m, t, t0 + .75 + i * .15));
+  chips.forEach((c, i) => { const k = P(t, t0 + 1.1 + i * .18, .5, E.back);
+    css(c, { transform: `translateX(${(1 - k) * 80}px)`, opacity: clamp((t - (t0 + 1.1 + i * .18)) / .2) }); });
+};
+const cardIn = (card, t, t0) => {
+  const k = P(t, t0, .7, E.expo);
+  css(card, { clipPath: `inset(${(1 - k) * 100}% 0 0 0 round 40px)`, transform: `translateY(${(1 - k) * 60}px)` });
+};
+
+function render(t) {
+  t = clamp(t, 0, DURATION - 1e-6);
+  for (const s of scenes) s.el.style.visibility = (t >= s.start && t < s.end) ? 'visible' : 'hidden';
+
+  // ---------- S1 HOOK ----------
+  { const sc = $('#s1'), r = t - 0;
+    if (t < 4.5) {
+      const img = $('img', sc); setFoot(img, r);
+      css(img, { transform: `scale(${lerp(1.18, 1.02, P(t, 0, 4.5, E.out))})` });
+      rise($('.l1', sc), t, .15); rise($('.l2', sc), t, .55); rise($('.l3', sc), t, 1.0);
+      const l2 = $('.l2 span', sc);
+      l2.style.transform += ` rotate(${lerp(0, -3, P(t, .55, .5, E.back))}deg)`;
+      const f = $('.flash', sc); const kf = P(t, 1.4, .5, E.back);
+      css(f, { transform: `scale(${lerp(.3, 1, kf)}) rotate(${lerp(-12, -3, kf)}deg)`, opacity: clamp((t - 1.4) / .15) });
+      // pulse on flash chip
+      if (t > 2) f.style.transform += ` scale(${1 + .05 * Math.sin((t - 2) * 9)})`;
+    } }
+
+  // ---------- S2 TITLE ----------
+  { const sc = $('#s2'), t0 = 4.5;
+    if (t >= t0 && t < 10) {
+      const r = t - t0;
+      $$('.bgtext', sc).forEach((b, i) => b.style.transform = `translateX(${(i ? -1 : 1) * (r * 90) - (i ? 0 : 600)}px)`);
+      const card = $('.card', sc); cardIn(card, t, t0);
+      card.style.transform += ` scale(${lerp(1, 1.04, r / 5.5)})`;
+      setFoot($('img', card), Math.min(12.2 + r, 17.2));
+      $$('#s2logo > .mask > span').forEach((s, i) => { const k = P(t, t0 + .35 + i * .08, .6, E.expo); s.style.transform = `translateY(${(1 - k) * 110}%)`; });
+      const kt2 = P(t, t0 + .9, .6, E.out); css($('.t2', sc), { opacity: kt2, letterSpacing: `${lerp(.5, .14, kt2)}em` });
+      const kt3 = P(t, t0 + 1.2, .5); css($('.t3', sc), { opacity: kt3, transform: `translateY(${(1 - kt3) * 30}px)` });
+      const b = $('.badge', sc); const kb = P(t, t0 + 1.0, .6, E.back);
+      css(b, { transform: `scale(${kb}) rotate(${r * 40}deg)` });
+    } }
+
+  // ---------- S3 FABRIC ----------
+  { const sc = $('#s3'), t0 = 10;
+    if (t >= t0 && t < 15.5) {
+      const card = $('.card', sc); cardIn(card, t, t0);
+      const k = P(t, t0, 5.5, E.lin);
+      $('img', card).style.transform = `scale(${lerp(1.05, 1.32, k)}) translate(${lerp(0, -40, k)}px, ${lerp(0, 30, k)}px)`;
+      featureText(sc, t, t0);
+    } }
+
+  // ---------- S4 METAL TAG ----------
+  { const sc = $('#s4'), t0 = 15.5;
+    if (t >= t0 && t < 21) {
+      const r = t - t0, card = $('.card', sc); cardIn(card, t, t0);
+      const foot = $('#s4foot'), img = $('#s4img');
+      // footage close-ups: 2.07–3.40 then 6.93–8.23, then still photo
+      if (r < 1.33) setFoot(foot, 2.07 + r); else setFoot(foot, 6.93 + Math.min(r - 1.33, 1.28));
+      foot.style.transform = `scale(1.08)`;
+      const ki = P(t, t0 + 2.6, .45, E.inOut);
+      css(img, { opacity: ki, transform: `scale(${lerp(1.25, 1.05, P(t, t0 + 2.6, 2.9, E.out))})` });
+      featureText(sc, t, t0);
+    } }
+
+  // ---------- S5 BACK ----------
+  { const sc = $('#s5'), t0 = 21;
+    if (t >= t0 && t < 26.5) {
+      const r = t - t0, card = $('.card', sc); cardIn(card, t, t0);
+      // zoom towards the triangle embroidery (~ image coords 543,583 of 1024)
+      const fx = 543 / 1024 * 960, fy = 583 / 1024 * 960;
+      const kz = P(t, t0, 3.2, E.inOut), s = lerp(1.04, 1.9, kz);
+      const tx = lerp(0, 480 - fx * s, kz) + (1 - kz) * (-(s - 1) * 480), ty = lerp(0, 500 - fy * s, kz) + (1 - kz) * (-(s - 1) * 480);
+      $('#s5zoom').style.transform = `translate(${tx}px,${ty}px) scale(${s})`;
+      const ring = $('#s5ring'); const kr = P(t, t0 + 1.6, .6, E.back);
+      const rs = 150; css(ring, { left: `${fx - rs / 2}px`, top: `${fy - rs / 2}px`, width: `${rs}px`, height: `${rs}px`,
+        borderWidth: `${6 / s}px`, transform: `scale(${kr * (1 + .06 * Math.sin(r * 8))})`, opacity: clamp((t - (t0 + 1.6)) / .2) * (1 - P(t, t0 + 3.3, .3)) });
+      const foot = $('#s5foot'); setFoot(foot, 4.07 + clamp(r - 3.6, 0, 1.36));
+      css(foot, { opacity: P(t, t0 + 3.6, .4, E.inOut), transform: `scale(${lerp(1.15, 1.05, P(t, t0 + 3.6, 1.9))})` });
+      featureText(sc, t, t0);
+    } }
+
+  // ---------- S6 COLORS ----------
+  { const sc = $('#s6'), t0 = 26.5;
+    if (t >= t0 && t < 32) {
+      const r = t - t0;
+      rise($('.h', sc), t, t0 + .05);
+      const kh = P(t, t0 + .05, .5, E.back); $('.h', sc).style.transform = `scale(${lerp(.7, 1, kh)})`; $('.h', sc).style.opacity = kh;
+      css($('.sub', sc), { opacity: P(t, t0 + .4, .4) });
+      const cards = $$('.cc', sc);
+      const hiStart = t0 + 1.6, hiEach = .75;
+      cards.forEach((c, i) => {
+        const s = t0 + .35 + i * .14; const k = P(t, s, .6, E.back);
+        let hl = 0; const hs = hiStart + i * hiEach; if (t >= hs && t < hs + hiEach) hl = Math.sin(Math.PI * (t - hs) / hiEach);
+        css(c, { transform: `translateY(${(1 - k) * 160}px) scale(${lerp(.8, 1, k) + hl * .06}) rotate(${hl * (i % 2 ? 1.5 : -1.5)}deg)`,
+          opacity: clamp((t - s) / .2), borderColor: hl > .05 ? `rgba(238,77,45,${hl})` : 'transparent', zIndex: hl > 0 ? 2 : 1 });
+        $('img', c).style.transform = `scale(${1 + hl * .05})`;
+      });
+      const kf = P(t, t0 + 4.6, .45, E.back); css($('.foot', sc), { opacity: clamp((t - t0 - 4.6) / .2), transform: `scale(${lerp(.6, 1, kf)})` });
+    } }
+
+  // ---------- S7 SIZE ----------
+  { const sc = $('#s7'), t0 = 32;
+    if (t >= t0 && t < 36.5) {
+      rise($('.h', sc), t, t0 + .05);
+      const kh = P(t, t0 + .05, .5, E.expo); $('.h', sc).style.opacity = kh;
+      const card = $('.sc', sc); const kc = P(t, t0 + .2, .6, E.back);
+      css(card, { transform: `scale(${lerp(.85, 1, kc)})`, opacity: clamp((t - t0 - .2) / .2) });
+      $$('.stat', sc).forEach((st, i) => { const k = P(t, t0 + .7 + i * .15, .55, E.back);
+        css(st, { transform: `translateY(${(1 - k) * 200}px)`, opacity: clamp((t - (t0 + .7 + i * .15)) / .2) }); });
+      const kn = P(t, t0 + .8, 1.1, E.out);
+      $('#s7a').textContent = Math.round(50 * kn) + '"';
+      $('#s7b').textContent = kn < 1 ? Math.round(26 * kn) + '"' : '26-27"';
+      css($('.note', sc), { opacity: P(t, t0 + 2, .5) });
+    } }
+
+  // ---------- S8 PRICE ----------
+  { const sc = $('#s8'), t0 = 36.5;
+    if (t >= t0 && t < 41.5) {
+      const r = t - t0;
+      $('.rays', sc).style.transform = `rotate(${r * 18}deg)`;
+      const kf = P(t, t0 + .05, .5, E.back);
+      css($('.fs', sc), { transform: `scale(${lerp(1.8, 1, kf)})`, opacity: clamp(r / .15) });
+      css($('.lbl', sc), { opacity: P(t, t0 + .45, .3), transform: `translateY(${(1 - P(t, t0 + .45, .4)) * 30}px)` });
+      const kp = P(t, t0 + .7, .45, E.back);
+      const shake = (t > t0 + 1.05 && t < t0 + 1.4) ? Math.sin(r * 90) * 14 * (1 - (r - 1.05) / .35) : 0;
+      const beat = r > 1.5 ? 1 + .04 * Math.max(0, Math.sin((r - 1.5) * Math.PI * 2.2)) : 1;
+      css($('.price', sc), { transform: `translateX(${shake}px) scale(${lerp(2.6, 1, kp) * beat})`, opacity: clamp((t - t0 - .7) / .1) });
+      $$('.chips .chip', sc).forEach((c, i) => { const k = P(t, t0 + 1.4 + i * .2, .5, E.back);
+        css(c, { transform: `scale(${k})`, opacity: clamp((t - (t0 + 1.4 + i * .2)) / .15) }); });
+      const kd = P(t, t0 + 1.9, .7, E.back);
+      css($('.prod', sc), { transform: `translateY(${(1 - kd) * 700}px) rotate(${lerp(10, -3, kd) + Math.sin(r * 2) * 1.2}deg)` });
+    } }
+
+  // ---------- S9 CTA ----------
+  { const sc = $('#s9'), t0 = 41.5;
+    if (t >= t0) {
+      const r = t - t0, img = $('img', sc); setFoot(img, 8.23 + r);
+      css(img, { transform: `scale(${lerp(1.12, 1.0, P(t, t0, 3.5, E.out))})` });
+      const kl = P(t, t0 + .1, .6, E.expo);
+      css($('.logo', sc), { opacity: kl, letterSpacing: `${lerp(.4, .06, kl)}em` });
+      css($('.sub', sc), { opacity: P(t, t0 + .4, .4) });
+      rise($('.big', sc), t, t0 + .3);
+      const kb = P(t, t0 + .6, .5, E.back);
+      css($('.btn', sc), { transform: `scale(${kb * (r > 1.1 ? 1 + .045 * Math.abs(Math.sin((r - 1.1) * 4.2)) : 1)})` });
+      css($('.link', sc), { opacity: P(t, t0 + .9, .4) });
+      css($('.arrow', sc), { opacity: P(t, t0 + 1.1, .3), transform: `translateY(${Math.abs(Math.sin(r * 5)) * 26}px)` });
+    } }
+
+  // ---------- global ----------
+  $('#brandTag').style.opacity = (t >= 4.5 && t < 10) || t >= 41.5 || (t >= 26.5 && t < 32) || (t >= 36.5 && t < 41.5) ? 0 : .9;
+  $('#progress').style.width = (t / DURATION * 100) + '%';
+  gctx.putImageData(tiles[Math.floor(t * 24) % tiles.length], 0, 0);
+
+  // transition wipe: three skewed bars sweep across around each cut
+  let wx = 200;
+  for (const c of cuts) { const k = (t - (c - .22)) / .44; if (k >= 0 && k <= 1) wx = lerp(-150, 110, E.inOut(k)); }
+  const w = $('#wipe'); w.style.transform = `translateX(${wx}%) skewX(-12deg)`; w.style.visibility = wx > 150 ? 'hidden' : 'visible';
+}
+
+async function ready() {
+  await document.fonts.ready;
+  await Promise.all(['400', '500', '600', '700', '800', '900'].map(w => document.fonts.load(`${w} 40px Kanit`, 'กขค'))
+    .concat([document.fonts.load('40px Anton', 'A')]));
+  await Promise.all($$('img[src]').map(i => i.decode().catch(() => {})));
+}
+async function renderAt(t) {
+  render(t);
+  await Promise.all($$('#stage img').filter(i => i.getAttribute('src')).map(i => i.decode().catch(() => {})));
+  return true;
+}
+window.DURATION = DURATION; window.ready = ready; window.renderAt = renderAt;
+
+const params = new URLSearchParams(location.search);
+const fit = () => { if (params.has('render')) return; const s = Math.min(innerWidth / 1080, (innerHeight - 30) / 1920); $('#stage').style.transform = `scale(${s})`; };
+addEventListener('resize', fit); fit();
+
+if (params.has('render')) { $('#hint').remove(); document.body.style.display = 'block'; }
+else if (params.has('t')) { ready().then(() => renderAt(+params.get('t'))); }
+else {
+  // live playback: preload footage frames, then loop
+  ready().then(async () => {
+    const pre = []; for (let i = 1; i <= SRC_FRAMES; i++) { const im = new Image(); im.src = footSrc((i - 1) / FPS_SRC); pre.push(im.decode().catch(() => {})); }
+    await Promise.all(pre);
+    let t0 = performance.now();
+    $('#stage').addEventListener('click', () => t0 = performance.now());
+    const loop = now => { render(((now - t0) / 1000) % DURATION); requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  });
+}
+})();
+</script>
+</body>
+</html>
