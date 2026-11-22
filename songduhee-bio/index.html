@@ -32,8 +32,6 @@
   #wipe{position:absolute;top:-10%;left:0;width:160%;height:120%;pointer-events:none;display:flex}
   #wipe div{flex:1}
   #progress{position:absolute;top:0;left:0;height:10px;background:var(--gold)}
-  #chap{position:absolute;left:56px;top:78px;display:flex;align-items:center;gap:16px;padding:10px 30px 10px 18px;border-radius:999px;background:rgba(0,0,0,.55);font-size:40px;font-weight:600;color:#fff;backdrop-filter:blur(6px)}
-  #chap i{width:22px;height:22px;border-radius:50%;background:var(--red);box-shadow:0 0 18px var(--red)}
 
   /* s01 hook */
   #s01 .shade{background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,0) 30%,rgba(0,0,0,.55) 58%,rgba(0,0,0,.92) 85%)}
@@ -499,7 +497,6 @@
 
   <div id="vig"></div>
   <canvas id="grain" width="540" height="960"></canvas>
-  <div id="chap"><i></i><span></span></div>
   <div id="wipe"><div style="background:#FFD23F"></div><div style="background:#E63946"></div><div style="background:#0b0d12"></div></div>
   <div id="progress"></div>
   <audio id="vo" src="voiceover.wav" preload="auto"></audio>
@@ -514,7 +511,6 @@ const SC = { s01:[0,3.62], s02:[3.62,8.9], s03:[8.9,12.45], s04:[12.45,18.12], s
   s13:[57.36,60.7], s14:[60.7,67.46], s15:[67.46,73.36], s16:[73.36,77.6], s17:[77.6,83.46], s18:[83.46,89.22],
   s19:[89.22,95.05], s20:[95.05,99.5] };
 const DURATION = 99.5;
-const CHAP = [[0,'ประวัติ ซองดูฮี'],[12.45,'EP.1 จุดเริ่มต้น'],[35.12,'EP.2 จุดเปลี่ยน'],[60.7,'EP.3 ผู้ให้'],[73.36,'EP.4 ดราม่า'],[89.22,'EP.5 สองมุมมอง']];
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -659,10 +655,6 @@ function render(t) {
     $('.lab-l', sc).style.filter = `brightness(${1 - fl * .5})`;
   }
 
-  // chapter pill
-  let ch = CHAP[0]; for (const c of CHAP) if (t >= c[0]) ch = c;
-  const cp = $('#chap'); $('span', cp).textContent = ch[1];
-  const kc = P(t, ch[0] + .05, .45, E.back); cp.style.transform = `translateX(${(1 - kc) * -700}px)`;
   $('#progress').style.width = (t / DURATION * 100) + '%';
   g.putImageData(tiles[Math.floor(t * 24) % tiles.length], 0, 0);
   // diagonal colour wipe on every cut

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>ซองดูฮี Cover</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#000}
+  #c{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:'Kanit',sans-serif;color:#fff;background:#0b0d12}
+  .abs{position:absolute}
+  .full{left:0;width:100%;text-align:center}
+  .bg{left:0;top:330px;width:100%;height:1590px;object-fit:cover;object-position:50% 8%}
+  .shade{inset:0;background:linear-gradient(180deg,#05060a 0%,#05060a 18%,rgba(5,6,10,.2) 30%,rgba(5,6,10,0) 42%,rgba(5,6,10,.25) 58%,rgba(5,6,10,.92) 76%,#05060a 100%)}
+  .kick{top:150px}
+  .kick span{display:inline-block;background:#E63946;font-size:62px;font-weight:800;padding:6px 40px;border-radius:999px;transform:rotate(-2deg)}
+  .name{top:1190px;font-size:250px;font-weight:900;line-height:1;color:#FFD23F;text-shadow:0 0 70px rgba(255,210,63,.45),0 14px 0 #000}
+  .sub{top:1460px;font-size:74px;font-weight:700;text-shadow:0 6px 20px rgba(0,0,0,.8)}
+  .q{top:1580px}
+  .q span{display:inline-block;font-size:66px;font-weight:900;padding:4px 30px;border-radius:20px}
+  .q .a{background:#2EC4B6;color:#0b0d12}.q .b{background:#E63946}
+  .q em{font-style:normal;font-size:60px;font-weight:700;margin:0 18px}
+  .inset{left:680px;top:700px;width:330px;height:420px;width:360px;height:460px;border-radius:30px;overflow:hidden;border:10px solid #fff;transform:rotate(5deg);box-shadow:0 30px 60px rgba(0,0,0,.6)}
+  .inset img{width:100%;height:100%;object-fit:cover;object-position:50% 35%}
+  .tag{left:640px;top:1080px;transform:rotate(-4deg)}
+  .tag span{display:inline-block;background:#FFD23F;color:#0b0d12;font-size:64px;font-weight:900;padding:2px 28px;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  .t1{top:250px;font-size:80px;font-weight:900;line-height:1.15;text-shadow:0 8px 30px rgba(0,0,0,.8)}
+  .t1 b{color:#FFD23F}
+</style>
+</head>
+<body>
+<div id="c">
+  <img class="abs bg" src="assets/photos/p4.jpg">
+  <div class="abs shade"></div>
+  <div class="abs full kick"><span>เปิดประวัติ</span></div>
+  <div class="abs full t1">จากคนขับแท็กซี่<br>สู่<b>ข่าวดังทั้งประเทศ</b></div>
+  <div class="abs inset"><img src="assets/photos/p2.jpg"></div>
+  <div class="abs tag"><span>#เช็กเกลียว</span></div>
+  <div class="abs full name">ซองดูฮี</div>
+  <div class="abs full sub">เขาคือใคร? ทำไมคนตามเป็นล้าน</div>
+  <div class="abs full q"><span class="a">ฮีโร่</span><em>หรือ</em><span class="b">ตัวต้นเรื่อง?</span></div>
+</div>
+</body>
+</html>
