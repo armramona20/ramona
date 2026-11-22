@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>LOCS Cover</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#000}
+  #c{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:'Kanit',sans-serif;
+     background:linear-gradient(180deg,#FFD84D 0%,#FFB020 45%,#FF7A1A 100%)}
+  .abs{position:absolute}
+  .full{left:0;width:100%;text-align:center}
+  .rays{left:50%;top:1040px;width:3200px;height:3200px;margin:-1600px 0 0 -1600px;border-radius:50%;
+    background:repeating-conic-gradient(rgba(255,255,255,.18) 0deg 8deg,rgba(255,255,255,0) 8deg 16deg)}
+  .sunglow{left:50%;top:1040px;width:1300px;height:1300px;margin:-650px 0 0 -650px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.75) 0%,rgba(255,255,255,0) 60%)}
+  .h1{top:250px;font-size:168px;font-weight:900;line-height:1.05;color:#0f0f10;
+    -webkit-text-stroke:0;text-shadow:0 10px 0 #fff,6px 6px 0 #fff,-6px 6px 0 #fff,6px -4px 0 #fff,-6px -4px 0 #fff}
+  .h2{top:480px}
+  .h2 span{display:inline-block;background:#0f0f10;color:#FFD84D;font-size:96px;font-weight:800;padding:6px 50px;border-radius:28px;transform:rotate(-2deg)}
+  .card{left:70px;top:720px;width:940px;height:578px;border-radius:50px;overflow:hidden;background:#fff;
+    box-shadow:0 40px 80px rgba(120,40,0,.35);transform:rotate(-3deg);border:10px solid #fff}
+  .card img{width:100%;height:100%;object-fit:cover;object-position:50% 80%;transform:scale(1.12);transform-origin:50% 75%}
+  .logo{top:1300px;left:20px !important;width:680px !important;font-family:'UnifrakturMaguntia',serif;font-size:250px;line-height:1;color:#0f0f10;
+    text-shadow:0 6px 0 #fff,5px 0 0 #fff,-5px 0 0 #fff,0 -4px 0 #fff}
+  .uv{left:50px;top:660px;width:250px;height:250px;border-radius:50%;background:#8B5CF6;color:#fff;border:8px solid #fff;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;transform:rotate(-10deg);box-shadow:0 14px 30px rgba(0,0,0,.25)}
+  .uv b{font-family:'Inter Tight';font-weight:900;font-size:96px}
+  .uv small{font-size:34px;font-weight:700;margin-top:6px}
+  .free{left:700px;top:1020px;width:340px;padding:18px 0 22px;border-radius:36px;background:#E5482F;border:8px solid #fff;
+    text-align:center;transform:rotate(7deg);box-shadow:0 16px 30px rgba(0,0,0,.3)}
+  .free img{width:250px;height:142px;object-fit:cover;border-radius:20px;background:#fff;display:block;margin:0 auto 8px}
+  .free b{display:block;color:#fff;font-size:60px;font-weight:900;line-height:1.05}
+  .free small{display:block;color:#FFE7A3;font-size:38px;font-weight:700}
+  .chips{top:1530px;display:flex;justify-content:center;gap:18px}
+  .chip{background:#fff;color:#0f0f10;font-size:46px;font-weight:800;padding:14px 30px;border-radius:999px;box-shadow:0 8px 0 rgba(0,0,0,.15)}
+</style>
+</head>
+<body>
+<div id="c">
+  <div class="abs sunglow"></div>
+  <div class="abs rays"></div>
+  <div class="abs full h1">แดดแยงตา?</div>
+  <div class="abs full h2"><span>จบด้วยแว่นตัวนี้!</span></div>
+  <div class="abs card"><img src="assets/glasses-gray.jpg" alt=""></div>
+  <div class="abs uv"><b>UV</b><small>PROTECTION</small></div>
+  <div class="abs full logo">Locs</div>
+  <div class="abs free"><img src="assets/case.jpg" alt=""><b>แถมกล่องฟรี!</b></div>
+  <div class="abs full chips"><span class="chip">กรอบเหลี่ยมหนา</span><span class="chip">เบา ใส่สบาย</span><span class="chip">หลายลาย</span></div>
+</div>
+</body>
+</html>
