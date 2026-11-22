@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LOCS Sunglasses Clip</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+  :root{ --sun:#FFC531; --orange:#FF7A1A; --red:#E5482F; --sky:#4FB3FF; --ink:#0f0f10; --cream:#FFF6E0; --uv:#8B5CF6; --lime:#D7F25A }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#000;height:100%;overflow:hidden}
+  body{display:flex;align-items:center;justify-content:center;font-family:'Kanit',sans-serif;color:#fff}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--ink);transform-origin:center;flex:none}
+  .scene{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+  .abs{position:absolute}
+  .full{left:0;width:100%;text-align:center}
+  .cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .goth{font-family:'UnifrakturMaguntia',serif;font-weight:400}
+  .sans{font-family:'Inter Tight',sans-serif;font-weight:900}
+  .mask{overflow:hidden;display:block;padding:0 12px}
+  .mask>span{display:inline-block}
+  .card{position:absolute;overflow:hidden;border-radius:44px;background:#fff;box-shadow:0 40px 80px rgba(0,0,0,.25)}
+  .card img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover}
+  .chip{display:inline-flex;align-items:center;gap:18px;padding:16px 40px;border-radius:999px;font-weight:700;font-size:56px;white-space:nowrap}
+  .shade{position:absolute;inset:0}
+
+  #grain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.06;mix-blend-mode:overlay}
+  #wipe{position:absolute;top:-10%;left:0;width:150%;height:120%;pointer-events:none;display:flex}
+  #wipe div{flex:1}
+  #progress{position:absolute;top:0;left:0;height:10px;background:var(--sun)}
+
+  /* A */
+  #A{background:linear-gradient(180deg,#7fc8ff 0%,#ffe3a1 55%,#ffb347 100%)}
+  #A .sun{left:290px;top:120px;width:500px;height:500px}
+  #A .glare{inset:0;background:radial-gradient(circle at 50% 22%,rgba(255,255,255,1) 0%,rgba(255,250,220,.85) 25%,rgba(255,240,200,0) 60%)}
+  #A .dash{left:0;top:1380px;width:1080px;height:540px}
+  #A .l1{top:760px;font-size:120px;font-weight:900;color:var(--ink);line-height:1.2}
+  #A .l2{top:900px;font-size:170px;font-weight:900;color:var(--red);line-height:1.2;text-shadow:0 8px 0 #fff}
+  #A .q{top:1140px}
+  #A .q span{background:var(--ink);color:var(--sun);font-size:96px;font-weight:800;padding:8px 48px;border-radius:26px}
+
+  /* B */
+  #B{background:var(--sun)}
+  #B .face{left:340px;top:140px;width:400px;height:400px}
+  #B .rows{left:70px;top:640px;display:flex;flex-direction:column;gap:34px}
+  #B .row{display:flex;align-items:center;gap:30px;width:940px;background:#fff;border-radius:36px;padding:26px 36px;box-shadow:0 14px 0 rgba(0,0,0,.12);color:var(--ink)}
+  #B .ic{width:150px;height:150px;border-radius:30px;background:var(--cream);display:flex;align-items:center;justify-content:center;flex:none}
+  #B .row b{font-size:74px;font-weight:800}
+  #B .row em{font-style:normal;margin-left:auto;font-size:80px;font-weight:900;color:var(--red)}
+
+  /* C */
+  #C .now{top:130px;font-size:150px;font-weight:900;color:var(--sun)}
+  #C .card{left:60px;top:360px;width:960px;height:590px}
+  #C .t1{top:1010px;font-size:96px;font-weight:700}
+  #C .logo{top:1130px;font-size:330px;line-height:1;color:#fff;text-shadow:0 0 40px rgba(255,197,49,.65)}
+  #C .new{left:740px;top:300px;width:250px;height:250px;border-radius:50%;background:var(--red);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;box-shadow:0 12px 0 #8f2615}
+  #C .new b{font-family:'Inter Tight';font-weight:900;font-size:80px}
+  #C .new small{font-size:46px;font-weight:700}
+
+  /* D */
+  #D .shade{background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,0) 30%,rgba(0,0,0,.2) 55%,rgba(0,0,0,.85) 85%)}
+  #D .brk{left:140px;top:420px;width:800px;height:800px}
+  #D .t1{top:1330px;font-size:140px;font-weight:900}
+  #D .t2{top:1530px}
+  #D .t2 span{background:var(--sun);color:var(--ink);font-size:110px;font-weight:900;padding:4px 56px;border-radius:26px}
+
+  /* E */
+  #E{background:linear-gradient(180deg,#8ad0ff,#fff1c9)}
+  #E .dim{inset:0;background:#0f2a44}
+  #E .sun{left:700px;top:40px;width:340px;height:340px}
+  #E .rays{left:0;top:0;width:1080px;height:1000px}
+  #E .card{left:60px;top:560px;width:960px;height:430px}
+  #E .shield{left:420px;top:380px;width:240px;height:240px}
+  #E .t1{top:1090px;font-size:110px;font-weight:900;color:var(--ink);line-height:1.15}
+  #E .t1 b{color:var(--uv);font-family:'Inter Tight'}
+  #E .t2{top:1360px}
+  #E .t2 .chip{background:var(--ink);color:#fff;font-size:72px}
+
+  /* F */
+  #F{background:linear-gradient(180deg,#d9f0ff,#bfe3ff)}
+  #F .card{left:60px;top:420px;width:960px;height:430px}
+  #F .feather{width:200px;height:200px}
+  #F .t1{top:1060px;font-size:170px;font-weight:900;color:var(--ink)}
+  #F .t2{top:1300px}
+  #F .t2 .chip{background:var(--sky);color:#fff;font-size:84px;padding:18px 60px}
+
+  /* G */
+  #G{background:var(--cream)}
+  #G .card{left:60px;top:150px;width:960px;height:430px}
+  #G .tiles{left:40px;top:660px;display:flex;gap:24px}
+  #G .tile{width:317px;height:470px;border-radius:40px;background:#fff;box-shadow:0 18px 40px rgba(0,0,0,.1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;color:var(--ink);font-size:58px;font-weight:800}
+  #G .tile .ib{width:180px;height:180px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+  #G .t1{top:1230px;font-size:120px;font-weight:900;color:var(--ink)}
+  #G .t2{top:1420px}
+  #G .t2 span{background:var(--orange);color:#fff;font-size:100px;font-weight:900;padding:6px 56px;border-radius:28px}
+
+  /* H */
+  #H{background:#141416}
+  #H .t1{top:130px;font-size:110px;font-weight:900}
+  #H .t1 b{color:var(--sun)}
+  #H .t2{top:280px;font-size:80px;font-weight:700;color:#cfcfcf}
+  #H .card{width:470px;height:340px;border-radius:36px}
+  #H .lb{position:absolute;bottom:18px;left:0;right:0;text-align:center}
+  #H .lb span{background:rgba(15,15,16,.85);color:#fff;font-size:38px;font-weight:700;padding:6px 26px;border-radius:999px}
+
+  /* I */
+  #I{background:radial-gradient(circle at 50% 40%,#3a2a12,#0f0f10 70%)}
+  #I .gift{left:340px;top:420px;width:400px;height:400px}
+  #I .t1{top:1000px;font-size:140px;font-weight:900;color:var(--sun)}
+
+  /* J */
+  #J .shade{background:linear-gradient(180deg,rgba(0,0,0,.75),rgba(0,0,0,.1) 30%,rgba(0,0,0,.1) 55%,rgba(0,0,0,.85) 82%)}
+  #J .stamp{left:120px;top:140px;width:840px;text-align:center}
+  #J .stamp span{display:inline-block;background:var(--red);color:#fff;font-size:150px;font-weight:900;padding:0 60px;border-radius:30px;border:10px solid #fff;box-shadow:0 18px 0 rgba(0,0,0,.3)}
+  #J .t0{top:380px;font-size:96px;font-weight:800}
+  #J .card{left:600px;top:1000px;width:420px;height:240px;border-radius:30px}
+  #J .c1{top:1360px}
+  #J .c2{top:1520px}
+  #J .c1 .chip,#J .c2 .chip{background:#fff;color:var(--ink);font-size:64px}
+
+  /* K */
+  #K{background:var(--orange)}
+  #K .rays{left:50%;top:820px;width:3000px;height:3000px;margin:-1500px 0 0 -1500px;border-radius:50%;
+    background:repeating-conic-gradient(rgba(255,255,255,.14) 0deg 9deg,rgba(255,255,255,0) 9deg 18deg)}
+  #K .t1{top:150px;font-size:110px;font-weight:900}
+  #K .sale{top:290px;font-size:330px;line-height:1;color:#fff;text-shadow:0 16px 0 rgba(120,30,0,.35)}
+  #K .card{left:90px;top:680px;width:900px;height:553px}
+  #K .logo{top:1250px;font-size:150px;color:var(--ink)}
+  #K .btn{left:140px;top:1450px;width:800px;height:180px;border-radius:999px;background:var(--ink);display:flex;align-items:center;justify-content:center;gap:26px;font-size:90px;font-weight:900;box-shadow:0 16px 0 rgba(0,0,0,.3)}
+  #K .hurry{top:1660px;font-size:80px;font-weight:900;color:#fff}
+  #hint{position:fixed;bottom:12px;left:0;right:0;text-align:center;font:14px sans-serif;color:#888}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- A 0.0 ขับรถแล้วแดดแยงตา / 2.48 ใครเจอบ้าง -->
+<section class="scene" id="A">
+  <svg class="abs sun" viewBox="0 0 200 200"><g id="Arays" fill="#FFC531">
+    <polygon points="100,0 108,40 92,40"/><polygon points="100,200 108,160 92,160"/><polygon points="0,100 40,92 40,108"/><polygon points="200,100 160,92 160,108"/>
+    <polygon points="29,29 60,52 52,60"/><polygon points="171,171 140,148 148,140"/><polygon points="171,29 148,60 140,52"/><polygon points="29,171 52,140 60,148"/></g>
+    <circle cx="100" cy="100" r="52" fill="#FFD84D" stroke="#FFF3B0" stroke-width="6"/></svg>
+  <div class="abs shade glare" id="Aglare"></div>
+  <svg class="abs dash" viewBox="0 0 1080 540">
+    <path d="M0 140 Q540 60 1080 140 L1080 540 L0 540Z" fill="#1d1d20"/>
+    <circle cx="540" cy="420" r="230" fill="none" stroke="#3a3a40" stroke-width="44"/>
+    <path d="M330 420 H750 M540 420 V640" stroke="#3a3a40" stroke-width="44"/><circle cx="540" cy="420" r="60" fill="#3a3a40"/>
+  </svg>
+  <div class="abs full mask l1"><span>ขับรถแล้ว</span></div>
+  <div class="abs full mask l2"><span>แดดแยงตา!</span></div>
+  <div class="abs full q"><span>ใครเจอบ้าง?</span></div>
+</section>
+
+<!-- B 4.24 ไปเที่ยว-หยีตา / 6.26 ขับรถ-แสบตา / 8.52 ถ่ายรูป-หน้าย่น -->
+<section class="scene" id="B">
+  <svg class="abs face" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="92" fill="#FFE0B2" stroke="#0f0f10" stroke-width="6"/>
+    <g id="Beyes" stroke="#0f0f10" stroke-width="8" stroke-linecap="round" fill="none">
+      <path d="M48 86 l24 10 l-24 10"/><path d="M152 86 l-24 10 l24 10"/></g>
+    <path id="Bmouth" d="M70 146 q30 -18 60 0" stroke="#0f0f10" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <path d="M160 40 q10 18 0 26 q-10 -8 0 -26z" fill="#4FB3FF"/>
+  </svg>
+  <div class="abs rows">
+    <div class="row"><span class="ic"><svg width="110" height="110" viewBox="0 0 24 24"><path d="M12 22V11M12 11c-3-4-7-4-9-2 3-1 6 0 9 2zm0 0c3-4 7-4 9-2-3-1-6 0-9 2zm0 0c-1-4-4-6-7-6 3 1 5 3 7 6zm0 0c1-4 4-6 7-6-3 1-5 3-7 6z" fill="#2fa36b" stroke="#1d7a4f" stroke-width="1"/><path d="M4 22h16" stroke="#e0b35a" stroke-width="2"/></svg></span><b>ไปเที่ยว</b><em>หยีตา</em></div>
+    <div class="row"><span class="ic"><svg width="110" height="110" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#0f0f10" stroke-width="2.4"/><circle cx="12" cy="12" r="2.5" fill="#0f0f10"/><path d="M3.5 11h6M14.5 11h6M12 14.5V21" stroke="#0f0f10" stroke-width="2.4"/></svg></span><b>ขับรถ</b><em>แสบตา</em></div>
+    <div class="row"><span class="ic"><svg width="110" height="110" viewBox="0 0 24 24"><rect x="2.5" y="6.5" width="19" height="13" rx="3" fill="none" stroke="#0f0f10" stroke-width="2.2"/><path d="M8 6.5l1.5-2.5h5L16 6.5" fill="none" stroke="#0f0f10" stroke-width="2.2"/><circle cx="12" cy="13" r="3.6" fill="none" stroke="#0f0f10" stroke-width="2.2"/></svg></span><b>ถ่ายรูป</b><em>หน้าย่น</em></div>
+  </div>
+</section>
+
+<!-- C 11.58 ตัวนี้ / 12.3 แว่นกันแดดแฟชั่น / 14.16 LOCS / 14.8 รุ่นใหม่ -->
+<section class="scene" id="C">
+  <div class="abs full now">ตัวนี้!</div>
+  <div class="card"><img src="assets/glasses-gray.jpg" alt=""></div>
+  <div class="abs new"><b>NEW</b><small>รุ่นใหม่</small></div>
+  <div class="abs full mask t1"><span>แว่นกันแดดแฟชั่น</span></div>
+  <div class="abs full logo goth">Locs</div>
+</section>
+
+<!-- D 15.78 กรอบเหลี่ยมหนา / 17.04 ดูเท่ -->
+<section class="scene" id="D">
+  <img class="cover foot" alt="">
+  <div class="shade"></div>
+  <svg class="abs brk" viewBox="0 0 100 100" fill="none" stroke="#FFC531" stroke-width="2.4" stroke-linecap="round">
+    <path d="M2 18V2h16M82 2h16v16M98 82v16H82M18 98H2V82"/></svg>
+  <div class="abs full mask t1"><span>กรอบเหลี่ยมหนา</span></div>
+  <div class="abs full t2"><span>ดูเท่!</span></div>
+</section>
+
+<!-- E 18.38 เลนส์ป้องกันรังสี UV / 20.62 ช่วยลดแสงจ้า -->
+<section class="scene" id="E">
+  <svg class="abs sun" viewBox="0 0 200 200"><g id="Erays" fill="#FFC531">
+    <polygon points="100,0 108,40 92,40"/><polygon points="100,200 108,160 92,160"/><polygon points="0,100 40,92 40,108"/><polygon points="200,100 160,92 160,108"/>
+    <polygon points="29,29 60,52 52,60"/><polygon points="171,171 140,148 148,140"/><polygon points="171,29 148,60 140,52"/><polygon points="29,171 52,140 60,148"/></g>
+    <circle cx="100" cy="100" r="52" fill="#FFD84D"/></svg>
+  <svg class="abs rays" viewBox="0 0 1080 1000" id="Euv"></svg>
+  <div class="abs shade dim" id="Edim"></div>
+  <div class="card"><img src="assets/glasses-black.jpg" alt=""></div>
+  <svg class="abs shield" viewBox="0 0 100 100"><path d="M50 6 88 20v28c0 22-16 38-38 46C28 86 12 70 12 48V20z" fill="#8B5CF6" stroke="#fff" stroke-width="5"/>
+    <text x="50" y="62" text-anchor="middle" font-family="Inter Tight" font-weight="900" font-size="30" fill="#fff">UV</text></svg>
+  <div class="abs full t1"><div class="mask"><span>เลนส์ป้องกันรังสี <b>UV</b></span></div></div>
+  <div class="abs full t2"><span class="chip"><svg width="70" height="70" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" fill="none" stroke="#FFC531" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="#FFC531"/></svg>ช่วยลดแสงจ้า</span></div>
+</section>
+
+<!-- F 22.5 น้ำหนักเบา / 23.82 ใส่สบาย -->
+<section class="scene" id="F">
+  <svg class="abs feather" id="Ffeather" viewBox="0 0 24 24"><path d="M20 3C12 3 6 9 6 17l-2 4 1 1 4-2c8 0 11-7 11-17z" fill="#fff" stroke="#0f0f10" stroke-width="1.3"/><path d="M5 21 15 9" stroke="#0f0f10" stroke-width="1.3"/></svg>
+  <div class="card"><img src="assets/glasses-brown.jpg" alt=""></div>
+  <div class="abs full mask t1"><span>น้ำหนักเบา</span></div>
+  <div class="abs full t2"><span class="chip">ใส่สบาย ✓</span></div>
+</section>
+
+<!-- G 25.18 ขับรถ / 26.18 เที่ยวทะเล / 27.48 เดินถนน / 28.58 ก็เข้า -->
+<section class="scene" id="G">
+  <div class="card"><img src="assets/glasses-black.jpg" alt=""></div>
+  <div class="abs tiles">
+    <div class="tile"><span class="ib" style="background:#FFE7A3"><svg width="120" height="120" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#0f0f10" stroke-width="2.4"/><circle cx="12" cy="12" r="2.5" fill="#0f0f10"/><path d="M3.5 11h6M14.5 11h6M12 14.5V21" stroke="#0f0f10" stroke-width="2.4"/></svg></span>ขับรถ</div>
+    <div class="tile"><span class="ib" style="background:#CDEBFF"><svg width="120" height="120" viewBox="0 0 24 24"><path d="M2 15c2.5-2 4.5-2 7 0s4.5 2 7 0 4.5-2 6 0M2 19c2.5-2 4.5-2 7 0s4.5 2 7 0 4.5-2 6 0" fill="none" stroke="#1f7fd1" stroke-width="2.2" stroke-linecap="round"/><circle cx="17" cy="7" r="3" fill="#FFC531"/></svg></span>เที่ยวทะเล</div>
+    <div class="tile"><span class="ib" style="background:#FFD6CC"><svg width="120" height="120" viewBox="0 0 24 24"><path d="M3 21V9h6v12M9 21V4h8v17M17 21v-9h4v9M2 21h20" fill="none" stroke="#0f0f10" stroke-width="2" stroke-linejoin="round"/><path d="M12 7h2M12 10h2M12 13h2M5 12h2M5 15h2" stroke="#0f0f10" stroke-width="1.6"/></svg></span>เดินถนน</div>
+  </div>
+  <div class="abs full mask t1"><span>ใส่ได้ทุกที่</span></div>
+  <div class="abs full t2"><span>เข้าทุกลุค!</span></div>
+</section>
+
+<!-- H 29.64 มีให้เลือกหลายลาย / 31.22 ที่ขาแว่น -->
+<section class="scene" id="H">
+  <div class="abs full t1"><div class="mask"><span>มีให้เลือก<b>หลายลาย</b></span></div></div>
+  <div class="abs full t2"><div class="mask"><span>ที่ขาแว่นด้วยนะ</span></div></div>
+  <div class="card" style="left:50px;top:470px"><img src="assets/temple-white.jpg" alt=""><div class="lb"><span>Skull ขาว</span></div></div>
+  <div class="card" style="left:560px;top:470px"><img src="assets/temple-red.jpg" alt=""><div class="lb"><span>Skull แดง</span></div></div>
+  <div class="card" style="left:50px;top:860px"><img src="assets/temple-blue.jpg" alt=""><div class="lb"><span>ลายฟ้า</span></div></div>
+  <div class="card" style="left:560px;top:860px"><img src="assets/temple-bandana.jpg" alt=""><div class="lb"><span>ลายบันดานา</span></div></div>
+</section>
+
+<!-- I 32.48 และที่เด็ดคือ -->
+<section class="scene" id="I">
+  <svg class="abs gift" viewBox="0 0 100 100" id="Igift">
+    <rect x="14" y="44" width="72" height="50" rx="4" fill="#E5482F"/><rect x="46" y="44" width="8" height="50" fill="#FFC531"/>
+    <g id="Ilid"><rect x="8" y="30" width="84" height="16" rx="4" fill="#ff6a50"/><rect x="46" y="30" width="8" height="16" fill="#FFC531"/>
+      <path d="M50 30c-8-14-22-12-16-2 3 4 10 2 16 2zm0 0c8-14 22-12 16-2-3 4-10 2-16 2z" fill="#FFC531"/></g>
+  </svg>
+  <div class="abs full mask t1"><span>และที่เด็ดคือ...</span></div>
+</section>
+
+<!-- J 34.62 แถมกล่องแว่นให้ฟรี (ฟรี 35.66) / 36.42 พกไปเที่ยว / 37.98 เก็บแว่นปลอดภัย -->
+<section class="scene" id="J">
+  <img class="cover foot" alt="">
+  <div class="shade"></div>
+  <div class="abs stamp"><span>แถมฟรี!</span></div>
+  <div class="abs full mask t0"><span>กล่องใส่แว่น</span></div>
+  <div class="card"><img src="assets/case.jpg" alt=""></div>
+  <div class="abs full c1"><span class="chip">🎒 พกไปเที่ยวได้เลย</span></div>
+  <div class="abs full c2"><span class="chip"><svg width="60" height="60" viewBox="0 0 24 24"><path d="M12 2 20 5v6c0 5-3.4 9-8 11-4.6-2-8-6-8-11V5z" fill="#2fa36b"/><path d="M8 12l3 3 5-6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>เก็บแว่นได้ปลอดภัย</span></div>
+</section>
+
+<!-- K 40.02 ตอนนี้กำลังมีโปร / 41.82 รีบกดสั่งก่อนหมด -->
+<section class="scene" id="K">
+  <div class="abs rays"></div>
+  <div class="abs full mask t1"><span>ตอนนี้กำลังมีโปร!</span></div>
+  <div class="abs full sale sans">SALE</div>
+  <div class="card"><img src="assets/glasses-gray.jpg" alt=""></div>
+  <div class="abs full logo goth">Locs</div>
+  <div class="abs btn">
+    <svg width="90" height="90" viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h11l2-8H7" fill="none" stroke="#FFC531" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="19.5" r="1.6" fill="#FFC531"/><circle cx="17" cy="19.5" r="1.6" fill="#FFC531"/></svg>
+    กดสั่งเลย!</div>
+  <div class="abs full hurry">รีบก่อนหมดนะ!</div>
+</section>
+
+<canvas id="grain" width="540" height="960"></canvas>
+<div id="wipe"><div style="background:#FFC531"></div><div style="background:#0f0f10"></div><div style="background:#FF7A1A"></div></div>
+<div id="progress"></div>
+</div>
+<div id="hint">คลิกเพื่อเล่นใหม่ (มีเสียง) · ?t=วินาที เพื่อดูเฟรม</div>
+<audio id="vo" src="voiceover.wav" preload="auto"></audio>
+
+<script>
+(() => {
+const SC = { A:[0,4.0], B:[4.0,11.3], C:[11.3,15.6], D:[15.6,18.2], E:[18.2,22.35], F:[22.35,24.95],
+             G:[24.95,29.5], H:[29.5,32.3], I:[32.3,34.5], J:[34.5,39.75], K:[39.75,45] };
+const DURATION = 45, FPS_SRC = 30, SRC_FRAMES = 922;
+// footage (hands-on clip) source start per scene, seconds
+const FOOT = { D: 13.5, J: 19.5 };
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const E = { lin: t => t, out: t => 1 - Math.pow(1 - t, 3), inOut: t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3) / 2,
+  expo: t => t >= 1 ? 1 : 1 - Math.pow(2, -10 * t),
+  back: t => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); } };
+const P = (t, s, d, e = E.out) => e(clamp((t - s) / d));
+const css = (el, o) => { for (const k in o) el.style[k] = o[k]; };
+const rise = (el, t, s, d = .5) => { const sp = el.matches('.mask') ? el.firstElementChild : (el.querySelector('.mask>span') || el);
+  sp.style.transform = `translateY(${(1 - P(t, s, d, E.expo)) * 115}%)`; };
+const pop = (el, t, s, d = .45, from = 0, extra = '') => { const k = P(t, s, d, E.back);
+  css(el, { transform: `scale(${lerp(from, 1, k)}) ${extra}`, opacity: clamp((t - s) / .12) }); };
+const slide = (el, t, s, dx = 0, dy = 80, d = .5, extra = '') => { const k = P(t, s, d, E.expo);
+  css(el, { transform: `translate(${(1 - k) * dx}px,${(1 - k) * dy}px) ${extra}`, opacity: clamp((t - s) / .15) }); };
+const footSrc = sec => 'assets/footage/' + String(clamp(Math.round(sec * FPS_SRC) + 1, 1, SRC_FRAMES)).padStart(4, '0') + '.jpg';
+const setFoot = (img, sec) => { const s = footSrc(sec); if (img.getAttribute('src') !== s) img.setAttribute('src', s); };
+
+// UV rays (E): lines from the sun to the lens
+const uv = $('#Euv');
+for (let i = 0; i < 7; i++) {
+  const x2 = 180 + i * 120;
+  uv.insertAdjacentHTML('beforeend', `<line class="ray" x1="870" y1="210" x2="${x2}" y2="560" stroke="#8B5CF6" stroke-width="12" stroke-linecap="round" stroke-dasharray="26 22"/>
+    <circle class="hit" cx="${x2}" cy="560" r="26" fill="none" stroke="#8B5CF6" stroke-width="8"/>`);
+}
+
+const grain = $('#grain'), g = grain.getContext('2d'), tiles = [];
+for (let k = 0; k < 6; k++) { const id = g.createImageData(540, 960); let s = 7 + k * 555;
+  for (let i = 0; i < id.data.length; i += 4) { s = (s * 16807) % 2147483647; const v = s / 2147483647 * 255; id.data[i] = id.data[i+1] = id.data[i+2] = v; id.data[i+3] = 255; }
+  tiles.push(id); }
+
+function render(t) {
+  t = clamp(t, 0, DURATION - 1e-6);
+  let cur = null;
+  for (const id in SC) { const on = t >= SC[id][0] && t < SC[id][1]; $('#' + id).style.visibility = on ? 'visible' : 'hidden'; if (on) cur = id; }
+  const sc = $('#' + cur), t0 = SC[cur][0], t1 = SC[cur][1];
+  const foot = $('img.foot', sc); if (foot) { setFoot(foot, FOOT[cur] + (t - t0)); foot.style.transform = `scale(${lerp(1.12, 1.0, P(t, t0, t1 - t0))})`; }
+
+  if (cur === 'A') {
+    $('#Arays').setAttribute('transform', `rotate(${t * 40} 100 100)`);
+    const flare = 1 + .25 * P(t, 1.0, .5) + .06 * Math.sin(t * 14);
+    $('.sun', sc).style.transform = `scale(${flare})`;
+    $('#Aglare').style.opacity = clamp(.35 + .55 * P(t, 1.0, .4) * (.8 + .2 * Math.sin(t * 9)));
+    slide($('.dash', sc), t, 0, 0, 200, .6);
+    rise($('.l1', sc), t, .05); rise($('.l2', sc), t, 1.0);
+    if (t > 1.5) $('.l2 span', sc).style.transform += ` translateX(${Math.sin(t * 30) * 5}px)`;
+    pop($('.q span', sc), t, 2.48, .4, .3, `rotate(${-3 + Math.sin(t * 18) * (t < 3.2 ? 2 : 0)}deg)`);
+  }
+
+  if (cur === 'B') {
+    pop($('.face', sc), t, 4.05, .5, .3, `rotate(${Math.sin(t * 3) * 4}deg)`);
+    const squint = [4.24, 6.26, 8.52].filter(c => t >= c).length;
+    $('#Beyes').setAttribute('transform', `translate(0 ${squint * 3}) scale(1 ${1 - squint * .12}) translate(0 ${squint * 10})`);
+    $$('.row', sc).forEach((r, i) => { const s = [4.24, 6.26, 8.52][i]; slide(r, t, s, -1000, 0, .5);
+      const em = $('em', r); pop(em, t, s + [1.0, 1.1, .9][i], .4, 2.2, `rotate(${-4}deg)`); });
+    sc.style.filter = t > 10.8 ? `brightness(${1 - P(t, 10.8, .5) * .7})` : '';
+  }
+
+  if (cur === 'C') {
+    pop($('.now', sc), t, 11.58, .4, 2.2);
+    const card = $('.card', sc); const k = P(t, 12.0, .6, E.expo);
+    css(card, { clipPath: `inset(${(1 - k) * 100}% 0 0 0 round 44px)`, transform: `translateY(${(1 - k) * 60}px)` });
+    $('img', card).style.transform = `scale(${lerp(1.15, 1.0, P(t, 12, 3.6))})`;
+    rise($('.t1', sc), t, 12.3);
+    const kl = P(t, 14.16, .5, E.back); css($('.logo', sc), { opacity: clamp((t - 14.16) / .1), transform: `scale(${lerp(2.2, 1, kl)})` });
+    pop($('.new', sc), t, 14.8, .45, 0, `rotate(${12 + Math.sin(t * 5) * 4}deg)`);
+  }
+
+  if (cur === 'D') {
+    const kb = P(t, 15.7, .6, E.back); css($('.brk', sc), { transform: `scale(${lerp(1.4, 1, kb)})`, opacity: clamp((t - 15.7) / .2) });
+    rise($('.t1', sc), t, 15.78); pop($('.t2 span', sc), t, 17.04, .4, .2, 'rotate(-3deg)');
+  }
+
+  if (cur === 'E') {
+    $('#Erays').setAttribute('transform', `rotate(${t * 40} 100 100)`);
+    const card = $('.card', sc); const kc = P(t, 18.2, .55, E.expo);
+    css(card, { transform: `translateY(${(1 - kc) * 300}px)`, opacity: kc });
+    // rays travel toward lens, blocked on impact
+    const kr = P(t, 18.6, 1.0, E.lin);
+    $$('.ray', sc).forEach((r, i) => { const L = 600; r.style.strokeDashoffset = -t * 120; r.style.opacity = kr > 0 ? 1 : 0;
+      r.setAttribute('stroke-dasharray', `26 22`); r.style.clipPath = ''; r.style.strokeOpacity = lerp(1, .25, P(t, 19.9, .6)); });
+    $$('.hit', sc).forEach((h, i) => { const s = 19.5 + i * .06, k = P(t, s, .5); css(h, { opacity: (t > s ? 1 - k : 0), transformOrigin: 'center', transformBox: 'fill-box', transform: `scale(${1 + k * 2})` }); });
+    pop($('.shield', sc), t, 19.68, .45, 0, `rotate(${Math.sin(t * 4) * 4}deg)`);
+    $('#Edim').style.opacity = .0 + .35 * P(t, 20.62, .8, E.inOut);
+    $('.sun', sc).style.transform = `scale(${1.2 - .3 * P(t, 20.62, .8)})`;
+    rise($('.t1', sc), t, 18.38); pop($('.t2', sc), t, 20.62, .45, .4);
+  }
+
+  if (cur === 'F') {
+    const card = $('.card', sc); const kc = P(t, 22.35, .6, E.back);
+    css(card, { transform: `translateY(${(1 - kc) * 200 + Math.sin(t * 2.4) * 22}px) rotate(${Math.sin(t * 1.7) * 2.5}deg)`, opacity: clamp((t - 22.35) / .15) });
+    const fk = clamp((t - 22.35) / 2.6);
+    css($('#Ffeather'), { left: `${lerp(760, 140, fk) + Math.sin(t * 3) * 60}px`, top: `${lerp(-150, 880, fk)}px`, transform: `rotate(${Math.sin(t * 3) * 30}deg)` });
+    rise($('.t1', sc), t, 22.5); pop($('.t2', sc), t, 23.82, .45, .4);
+  }
+
+  if (cur === 'G') {
+    const card = $('.card', sc); const kc = P(t, 24.95, .6, E.expo);
+    css(card, { clipPath: `inset(0 ${(1 - kc) * 100}% 0 0 round 44px)` });
+    $('img', card).style.transform = `scale(${lerp(1.1, 1, P(t, 24.95, 4.5))})`;
+    $$('.tile', sc).forEach((x, i) => { const s = [25.18, 26.18, 27.48][i]; pop(x, t, s, .45, .3, `translateY(${(1 - P(t, s, .45)) * 120}px)`); });
+    rise($('.t1', sc), t, 27.9); pop($('.t2 span', sc), t, 28.5, .45, .3, 'rotate(-3deg)');
+  }
+
+  if (cur === 'H') {
+    rise($('.t1', sc), t, 29.64); rise($('.t2', sc), t, 31.1);
+    $$('.card', sc).forEach((c, i) => { const s = 30.0 + i * .22; pop(c, t, s, .45, .4, `rotate(${(i % 2 ? 2 : -2)}deg)`);
+      $('img', c).style.transform = `scale(${lerp(1.25, 1.05, P(t, s, 2))})`; });
+  }
+
+  if (cur === 'I') {
+    const shake = Math.sin(t * 40) * 3 * P(t, 32.5, 1);
+    pop($('#Igift'), t, 32.3, .45, .3, `rotate(${shake}deg)`);
+    const lid = P(t, 34.0, .4, E.back); $('#Ilid').setAttribute('transform', `translate(0 ${-lid * 22}) rotate(${-lid * 12} 50 38)`);
+    rise($('.t1', sc), t, 32.48);
+  }
+
+  if (cur === 'J') {
+    $('.shade', sc).style.opacity = 1;
+    const ks = P(t, 35.66, .4, E.back);
+    css($('.stamp span', sc), { transform: `scale(${lerp(3, 1, ks)}) rotate(-6deg)`, opacity: clamp((t - 35.66) / .08) });
+    rise($('.t0', sc), t, 34.62);
+    const kc = P(t, 34.9, .5, E.back); css($('.card', sc), { transform: `scale(${kc}) rotate(${4 + Math.sin(t * 2) * 2}deg)` });
+    pop($('.c1', sc), t, 36.42, .45, .3); pop($('.c2', sc), t, 37.98, .45, .3);
+  }
+
+  if (cur === 'K') {
+    $('.rays', sc).style.transform = `rotate(${t * 20}deg)`;
+    rise($('.t1', sc), t, 40.02);
+    const ks = P(t, 40.8, .45, E.back), beat = t > 41.4 ? 1 + .04 * Math.abs(Math.sin((t - 41.4) * 5)) : 1;
+    css($('.sale', sc), { transform: `scale(${lerp(2.4, 1, ks) * beat})`, opacity: clamp((t - 40.8) / .1) });
+    const kc = P(t, 40.2, .6, E.back); css($('.card', sc), { transform: `translateY(${(1 - kc) * 900}px) rotate(${-2 + Math.sin(t * 2) * 1.5}deg)` });
+    pop($('.logo', sc), t, 41.0, .45, .4);
+    const kb = P(t, 41.82, .45, E.back);
+    css($('.btn', sc), { transform: `scale(${kb * (t > 42.3 ? 1 + .05 * Math.abs(Math.sin((t - 42.3) * 4.5)) : 1)})` });
+    pop($('.hurry', sc), t, 42.4, .4, .4, `translateX(${t > 42.8 ? Math.sin(t * 35) * 5 : 0}px)`);
+  }
+
+  $('#progress').style.width = (t / DURATION * 100) + '%';
+  g.putImageData(tiles[Math.floor(t * 24) % tiles.length], 0, 0);
+  let wx = 200; for (const id in SC) { const c = SC[id][0]; if (!c) continue; const k = (t - (c - .2)) / .4; if (k >= 0 && k <= 1) wx = lerp(-150, 110, E.inOut(k)); }
+  const w = $('#wipe'); w.style.transform = `translateX(${wx}%) skewX(-12deg)`; w.style.visibility = wx > 150 ? 'hidden' : 'visible';
+}
+
+async function ready() {
+  await document.fonts.ready;
+  await Promise.all(['400','500','600','700','800','900'].map(w => document.fonts.load(`${w} 40px Kanit`, 'กขค'))
+    .concat(['900'].map(w => document.fonts.load(`${w} 40px "Inter Tight"`, 'A')))
+    .concat([document.fonts.load('40px UnifrakturMaguntia', 'Locs')]));
+  await Promise.all($$('img[src]').map(i => i.decode().catch(() => {})));
+}
+async function renderAt(t) {
+  render(t);
+  await Promise.all($$('#stage img.foot').filter(i => i.getAttribute('src')).map(i => i.decode().catch(() => {})));
+  return true;
+}
+window.DURATION = DURATION; window.ready = ready; window.renderAt = renderAt; window.TIMELINE = SC;
+
+const params = new URLSearchParams(location.search);
+const fit = () => { if (params.has('render')) return; const s = Math.min(innerWidth / 1080, (innerHeight - 30) / 1920); $('#stage').style.transform = `scale(${s})`; };
+addEventListener('resize', fit); fit();
+if (params.has('render')) { $('#hint').remove(); document.body.style.display = 'block'; }
+else if (params.has('t')) ready().then(() => renderAt(+params.get('t')));
+else ready().then(async () => {
+  const pre = []; for (const id in FOOT) for (let s = 0; s < SC[id][1] - SC[id][0]; s += 1 / FPS_SRC) { const im = new Image(); im.src = footSrc(FOOT[id] + s); pre.push(im.decode().catch(() => {})); }
+  await Promise.all(pre);
+  const vo = $('#vo'); let t0 = performance.now();
+  const restart = () => { t0 = performance.now(); vo.currentTime = 0; vo.play().catch(() => {}); };
+  $('#stage').addEventListener('click', restart);
+  const loop = now => { const t = (now - t0) / 1000; if (t > DURATION) restart(); render(t % DURATION); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+});
+})();
+</script>
+</body>
+</html>
